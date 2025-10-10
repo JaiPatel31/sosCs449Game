@@ -1,6 +1,4 @@
 package com.sosgame.Logic;
 
-public class GameUtils {
-
-
+public class Player {
 }
