@@ -1,32 +1,33 @@
 package com.sosgame.Logic;
 
+
 public class GameBoard {
 
-    private char[][] board;
+    private String[][] board;
     private int size;
 
     // Initialize an empty board with given size
     public GameBoard(int size) {
         this.size = size;
-        board = new char[size][size];
+        board = new String[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                board[i][j] = ' ';
+                board[i][j] = " ";
             }
         }
     }
 
     // Initialize the board with a predefined state
-    public GameBoard(char[][] board) {
+    public GameBoard(String[][] board) {
         this.size = board.length;
-        this.board = new char[size][size];
+        this.board = new String[size][size];
         for (int i = 0; i < size; i++) {
             System.arraycopy(board[i], 0, this.board[i], 0, size);
         }
     }
 
     // Get the current state of the board
-    public char[][] getBoard() {
+    public String[][] getBoard() {
         return  board;
     }
 
@@ -37,12 +38,20 @@ public class GameBoard {
 
     // Check if a cell is empty
     public boolean isCellEmpty(int row, int col) {
-        return board[row][col] == ' ';
+        return board[row][col] == " ";
     }
     // Place a letter on the board
-    public void placeLetter(int row, int col, char letter) {
-        if (isCellEmpty(row, col) && (letter == 'S' || letter == 'O')) {
-            board[row][col] = letter;
+    public void placeLetter(int row, int col, char letter, String player) {
+        if (isCellEmpty(row, col) && (letter == 'S' || letter == 'O') && (player.equals("Red") || player.equals("Blue"))) {
+            board[row][col] = String.valueOf(letter) + player.charAt(0); ; // e.g., "SR" for Red's S
+        }else {
+            if(!isCellEmpty(row, col)){
+                throw new IllegalArgumentException("Cell is already occupied.");
+            } else if (letter != 'S' && letter != 'O') {
+                throw new IllegalArgumentException("Invalid letter. Only 'S' or 'O' are allowed.");
+            } else if (!player.equals("Red") && !player.equals("Blue")) {
+                throw new IllegalArgumentException("Invalid player. Only 'Red' or 'Blue' are allowed.");
+            }
         }
     }
 }
