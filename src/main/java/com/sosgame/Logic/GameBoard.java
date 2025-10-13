@@ -8,6 +8,9 @@ public class GameBoard {
 
     // Initialize an empty board with given size
     public GameBoard(int size) {
+        if (size < 5 || size > 11) {
+            throw new IllegalArgumentException("Board size must be between 3 and 10.");
+        }
         this.size = size;
         board = new String[size][size];
         for (int i = 0; i < size; i++) {
@@ -38,8 +41,10 @@ public class GameBoard {
 
     // Check if a cell is empty
     public boolean isCellEmpty(int row, int col) {
+
         return board[row][col] == " ";
     }
+
     // Place a letter on the board
     public void placeLetter(int row, int col, char letter, String player) {
         if (isCellEmpty(row, col) && (letter == 'S' || letter == 'O') && (player.equals("Red") || player.equals("Blue"))) {
