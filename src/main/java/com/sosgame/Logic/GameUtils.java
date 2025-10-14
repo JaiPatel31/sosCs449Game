@@ -24,7 +24,6 @@ public class GameUtils {
         Player currentPlayer = PlayerRed.isTurn() ? PlayerRed : PlayerBlue;
         gameBoard.placeLetter(row, col, currentPlayer.getSelectedLetter(), currentPlayer.getColor());
         // After placing the letter, switch turns
-        currentPlayer.setTurn(false);
         SwitchTurn();
     }
 
