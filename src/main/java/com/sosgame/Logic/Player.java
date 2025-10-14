@@ -17,6 +17,15 @@ public class Player {
         this.isWinner = false;
     }
 
+    public Player(Player player) {
+        this.color = player.color;
+        this.type = player.type;
+        this.score = player.score;
+        this.selectedLetter = player.selectedLetter;
+        this.isTurn = player.isTurn;
+        this.isWinner = player.isWinner;
+    }
+
     public int getScore() {
         return score;
     }
@@ -28,6 +37,7 @@ public class Player {
     public void incrementScoreByNumber(int add) {
         this.score += add;
     }
+
     public String getType() {
         return type;
     }
