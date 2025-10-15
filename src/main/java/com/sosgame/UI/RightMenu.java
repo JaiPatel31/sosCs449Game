@@ -53,8 +53,8 @@ public class RightMenu {
         });
 
         //Vbox for Human Letter Selection
-        VBox blueLetterSelection = new VBox(10, redS, redO);
-        blueLetterSelection.setPadding(new Insets(0, 0, 0, 20));
+        VBox redLetterSelection = new VBox(10, redS, redO);
+        redLetterSelection.setPadding(new Insets(0, 0, 0, 20));
 
         //Add a Record CheckBox at the bottom
         replayGame = new Button("Replay Game");
@@ -70,8 +70,21 @@ public class RightMenu {
         VBox.setVgrow(rightBottomSpacer, Priority.ALWAYS);
 
         //add everything to the right menu
-        rightMenu.getChildren().addAll(rightTopSpacer, redPlayer, humanRed, blueLetterSelection, computerRed, rightBottomSpacer, rightButtonBox);
+        rightMenu.getChildren().addAll(rightTopSpacer, redPlayer, humanRed, redLetterSelection, computerRed, rightBottomSpacer, rightButtonBox);
 
         return rightMenu;
     }
+   public String getRedType(){
+        return humanRed.isSelected() ? "Human" : "Computer";
+   }
+   public String getRedLetter(){
+        return redS.isSelected() ? "S" : "O";
+   }
+   public boolean isReplayGame(){
+        return replayGame.isPressed();
+   }
+   public boolean isNewGame(){
+        return newGame.isPressed();
+    }
+
 }
