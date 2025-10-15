@@ -28,6 +28,7 @@ public class TopMenu {
 
         //Middle Buttons for simple and general mode
         simpleMode = new RadioButton("Simple Mode");
+        simpleMode.setSelected(true);//simple mode is default
         generalMode = new RadioButton("General Mode");
         ToggleGroup modeGroup = new ToggleGroup();
         simpleMode.setToggleGroup(modeGroup);
@@ -50,13 +51,11 @@ public class TopMenu {
         return  topMenu;
     }
     //getters for the selected options
-    public boolean isSimpleModeSelected() {
-        return simpleMode.isSelected();
+    public String getMode() {
+        if(simpleMode.isSelected()) return "Simple";
+        else return "General";
     }
-    public boolean isGeneralModeSelected() {
-        return generalMode.isSelected();
-    }
-    public String getBoardSize() {
-        return boardSizeInput.getText();
+    public int getBoardSize() {
+        return Integer.parseInt(boardSizeInput.getText());
     }
 }

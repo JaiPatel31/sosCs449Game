@@ -5,6 +5,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -69,12 +70,13 @@ public class LeftMenu {
 
         return leftMenu;
     }
+
     //getters for the selected options
-    public String getPlayerType() {
+    public String getBlueType() {
         return humanBlue.isSelected() ? "Human" : "Computer";
     }
 
-    public char getSelectedLetter() {
+    public char getBlueLetter() {
         return blueS.isSelected() ? 'S' : 'O';
     }
 

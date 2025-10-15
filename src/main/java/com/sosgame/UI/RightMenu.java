@@ -6,9 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 public class RightMenu {
     private RadioButton humanRed = new RadioButton("Human");
@@ -18,8 +16,12 @@ public class RightMenu {
     private Button replayGame = new Button("Replay Game");
     private Button newGame = new Button("New Game");
     private GameUtils gameUtils;
-    public VBox createRightMenu(GameUtils gameController) {
+
+
+    public VBox createRightMenu(GameUtils gameController, gameUI gameUI) {
         this.gameUtils = gameController;
+
+
         VBox rightMenu = new VBox(20);
         rightMenu.setPadding(new Insets(10));
 
@@ -59,9 +61,11 @@ public class RightMenu {
         //Add a Record CheckBox at the bottom
         replayGame = new Button("Replay Game");
         replayGame.setMaxWidth(Double.MAX_VALUE);
+        //New Game Button
         newGame = new Button("New Game");
         newGame.setMaxWidth(Double.MAX_VALUE);
         VBox rightButtonBox = new VBox(10, replayGame, newGame);
+        newGame.setOnAction(e -> gameUI.startNewGame());
 
         //Spacer to make the radio buttons go to the middle
         Region rightTopSpacer = new Region();
@@ -74,6 +78,7 @@ public class RightMenu {
 
         return rightMenu;
     }
+    //Getters for the selected options
    public String getRedType(){
         return humanRed.isSelected() ? "Human" : "Computer";
    }
@@ -86,5 +91,7 @@ public class RightMenu {
    public boolean isNewGame(){
         return newGame.isPressed();
     }
+
+
 
 }

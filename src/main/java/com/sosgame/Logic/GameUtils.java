@@ -1,13 +1,13 @@
 package com.sosgame.Logic;
 
 public class GameUtils {
-    GameBoard gameBoard;
-    Player PlayerRed;
-    Player PlayerBlue;
-    String gameMode; // "Simple" or "General"
+    private GameBoard gameBoard;
+    private Player PlayerRed;
+    private Player PlayerBlue;
+    private String gameMode; // "Simple" or "General"
 
     // Start a new game with given parameters
-    void startNewGame(int boardSize, String gameMode, String player1Type, String player2Type) {
+    public void startNewGame(int boardSize, String gameMode, String player1Type, String player2Type) {
         this.gameBoard = new GameBoard(boardSize);
         this.gameMode = gameMode;
         this.PlayerRed = new Player("Red", player1Type);
@@ -37,4 +37,19 @@ public class GameUtils {
             PlayerBlue.setTurn(false);
         }
     }
+
+    //GETTERS
+    public GameBoard getGameBoard() {
+        return gameBoard;
+    }
+    public Player getPlayerRed() {
+        return PlayerRed;
+    }
+    public Player getPlayerBlue() {
+        return  PlayerBlue;
+    }
+    public String getGameMode() {
+        return gameMode;
+    }
+
 }
