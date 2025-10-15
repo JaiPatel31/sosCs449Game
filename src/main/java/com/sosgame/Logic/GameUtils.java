@@ -1,8 +1,5 @@
 package com.sosgame.Logic;
 
-import com.sosgame.Logic.GameBoard;
-import com.sosgame.Logic.Player;
-
 public class GameUtils {
     GameBoard gameBoard;
     Player PlayerRed;
@@ -18,6 +15,10 @@ public class GameUtils {
         // Red always starts first
         this.PlayerRed.setTurn(true);
         this.PlayerBlue.setTurn(false);
+    }
+
+    void gameBoard(GameBoard gameBoard) {
+        this.gameBoard = new GameBoard(gameBoard);
     }
 
     void MakeMove(int row, int col) {

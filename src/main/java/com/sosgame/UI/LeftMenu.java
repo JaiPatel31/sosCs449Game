@@ -8,15 +8,17 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-
+import com.sosgame.Logic.GameUtils;
 public class LeftMenu {
     private RadioButton humanBlue;
     private RadioButton computerBlue;
     private RadioButton blueS;
     private RadioButton blueO;
     private CheckBox recordGame;
+    private GameUtils gameUtils;
 
-    public VBox createLeftMenu() {
+    public VBox createLeftMenu(GameUtils gameController) {
+        this.gameUtils = gameController;
         VBox leftMenu = new VBox(20);
         leftMenu.setPadding(new Insets(10));
 

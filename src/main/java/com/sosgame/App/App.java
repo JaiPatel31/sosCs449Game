@@ -12,7 +12,7 @@ public class App extends Application {
     @Override
     public void start(Stage PrimaryStage){
         gameUI gameUI = new gameUI();
-        Scene scene = new Scene(gameUI.createContent(), 600, 600);
+        Scene scene = new Scene(gameUI.createGUI(), 600, 600);
 
         PrimaryStage.setTitle("SOS Game");
         PrimaryStage.setScene(scene);

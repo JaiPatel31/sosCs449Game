@@ -1,27 +1,24 @@
 package com.sosgame.UI;
-import com.sosgame.Logic.GameBoard;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.*;
 import javafx.scene.layout.*;
-
+import com.sosgame.Logic.GameUtils;
 
 public class gameUI {
 
-    public BorderPane createContent(){
+    public BorderPane createGUI(){
+        GameUtils gameUtils = new GameUtils();
         BorderPane root = new BorderPane();
 
         TopMenu topMenu = new TopMenu();
-        root.setTop(topMenu.createTopMenu());
+        root.setTop(topMenu.createTopMenu(gameUtils));
 
         LeftMenu leftMenu = new LeftMenu();
-        root.setLeft(leftMenu.createLeftMenu());
+        root.setLeft(leftMenu.createLeftMenu(gameUtils));
 
         RightMenu rightMenu = new RightMenu();
-        root.setRight(rightMenu.createRightMenu());
+        root.setRight(rightMenu.createRightMenu(gameUtils));
 
         GameBoardUI gameBoardUI = new GameBoardUI();
-        root.setCenter(gameBoardUI.createGameBoard(5)); //default size 8x8
+        root.setCenter(gameBoardUI.createGameBoard(5, gameUtils)); //default size 8x8
         return  root;
 
     }

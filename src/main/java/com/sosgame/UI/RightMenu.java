@@ -1,5 +1,6 @@
 package com.sosgame.UI;
 
+import com.sosgame.Logic.GameUtils;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -16,8 +17,9 @@ public class RightMenu {
     private RadioButton redO = new RadioButton("O");
     private Button replayGame = new Button("Replay Game");
     private Button newGame = new Button("New Game");
-
-    public VBox createRightMenu() {
+    private GameUtils gameUtils;
+    public VBox createRightMenu(GameUtils gameController) {
+        this.gameUtils = gameController;
         VBox rightMenu = new VBox(20);
         rightMenu.setPadding(new Insets(10));
 

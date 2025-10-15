@@ -3,7 +3,7 @@ package com.sosgame.Logic;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class GameBoardTest {
+public class gameBoardTest {
 
     // Constructor Tests
     @Test
