@@ -99,17 +99,22 @@ public class gameUITest {
 
     // ---------- startNewGame() Success Path ----------
 
+    // Test that starting a new game calls GameUtils with correct parameters and sets the game board in the center
     @Test
     public void testStartNewGameSuccessfullyCallsGameUtilsAndSetsCenter() {
-        when(mockTopMenu.getBoardSize()).thenReturn(5);
-        when(mockTopMenu.getMode()).thenReturn("Simple");
-        when(mockRightMenu.getRedType()).thenReturn("Human");
-        when(mockLeftMenu.getBlueType()).thenReturn("Computer");
-        when(mockGameBoardUI.createGameBoard(anyInt(), any())).thenReturn(new VBox());
+        // Set up mock return values for menu selections
+        when(mockTopMenu.getBoardSize()).thenReturn(5); // Board size
+        when(mockTopMenu.getMode()).thenReturn("Simple"); // Game mode
+        when(mockRightMenu.getRedType()).thenReturn("Human"); // Red player type
+        when(mockLeftMenu.getBlueType()).thenReturn("Computer"); // Blue player type
+        when(mockGameBoardUI.createGameBoard(anyInt(), any())).thenReturn(new VBox()); // Game board UI
 
+        // Call the method to start a new game
         gameUIInstance.startNewGame();
 
-        verify(mockGameUtils, times(1)).startNewGame(5, "Human", "Computer", "Simple");
+        // Verify that GameUtils.startNewGame was called with correct arguments
+        verify(mockGameUtils, times(1)).startNewGame(5, "Simple", "Human", "Computer");
+        // Check that the game board is set in the center of the UI
         assertNotNull(((BorderPane) getPrivateField(gameUIInstance, "root")).getCenter());
     }
 
@@ -123,7 +128,7 @@ public class gameUITest {
 
         gameUIInstance.startNewGame();
 
-        verify(mockGameUtils).startNewGame(5, "Human", "Human", "Simple");
+        verify(mockGameUtils).startNewGame(5, "Simple","Human", "Human");
     }
 
     @Test
@@ -142,7 +147,7 @@ public class gameUITest {
             gameUIInstance.startNewGame();
             // After starting new game, the center should be replaced
             assertEquals(newBoard, root.getCenter());
-            verify(mockGameUtils).startNewGame(7, "Human", "Computer", "General");
+            verify(mockGameUtils).startNewGame(7,"General", "Human", "Computer" );
         });
 
         try { Thread.sleep(500); } catch (InterruptedException ignored) {}
@@ -197,7 +202,7 @@ public class gameUITest {
             try { Thread.sleep(500); } catch (InterruptedException ignored) {}
 
             // Should fall back to default size 5 and selected mode
-            verify(mockGameUtils).startNewGame(5, "Human", "Human", "General");
+            verify(mockGameUtils).startNewGame(5, "General", "Human", "Human" );
         }
     }
 

@@ -43,7 +43,7 @@ public class gameUI {
 
     // Handles invalid board size, starts game with default size
     private void illegalSize(IllegalArgumentException ex){
-        gameUtils.startNewGame(5, rightMenu.getRedType(), leftMenu.getBlueType(), topMenu.getMode()); // Default size 5
+        gameUtils.startNewGame(5, topMenu.getMode(),rightMenu.getRedType(), leftMenu.getBlueType()); // Default size 5
 
         resetGame(5);
         Alert alert = new Alert(Alert.AlertType.ERROR); // Show error alert
@@ -56,7 +56,7 @@ public class gameUI {
     // Handles valid board size, starts game with user size
     private void validSize(){
         int size = topMenu.getBoardSize();
-        gameUtils.startNewGame(size, leftMenu.getBlueType(),rightMenu.getRedType(), topMenu.getMode()); // Start game
+        gameUtils.startNewGame(size, topMenu.getMode(),rightMenu.getRedType(), leftMenu.getBlueType()); // Start game
         resetGame(size);
     }
 

@@ -30,8 +30,8 @@ package com.sosgame.Logic;
                 assertEquals("Human", gameUtils.getPlayerRed().getType());
                 assertEquals("Computer", gameUtils.getPlayerBlue().getType());
 
-                assertTrue(gameUtils.getPlayerRed().isTurn());
-                assertFalse(gameUtils.getPlayerBlue().isTurn());
+                assertTrue(gameUtils.getPlayerBlue().isTurn());
+                assertFalse(gameUtils.getPlayerRed().isTurn());
             }
             @Test
             public void testStartNewGeneralGameInitializesCorrectly() {
@@ -47,8 +47,8 @@ package com.sosgame.Logic;
                 assertEquals("Human", gameUtils.getPlayerRed().getType());
                 assertEquals("Computer", gameUtils.getPlayerBlue().getType());
 
-                assertTrue(gameUtils.getPlayerRed().isTurn());
-                assertFalse(gameUtils.getPlayerBlue().isTurn());
+                assertTrue(gameUtils.getPlayerBlue().isTurn());
+                assertFalse(gameUtils.getPlayerRed().isTurn());
             }
             @Test
             public void testStartNewGameResetsPreviousGame() {
@@ -60,8 +60,8 @@ package com.sosgame.Logic;
 
                 assertEquals(6, gameUtils.getGameBoard().getSize());
                 assertEquals("Simple", gameUtils.getGameMode());
-                assertTrue(gameUtils.getPlayerRed().isTurn());
-                assertFalse(gameUtils.getPlayerBlue().isTurn());
+                assertTrue(gameUtils.getPlayerBlue().isTurn());
+                assertFalse(gameUtils.getPlayerRed().isTurn());
                 assertEquals("AI", gameUtils.getPlayerRed().getType());
                 assertEquals("Human", gameUtils.getPlayerBlue().getType());
             }
@@ -69,24 +69,24 @@ package com.sosgame.Logic;
             // ---------- SwitchTurn() Tests ----------
 
             @Test
-            public void testSwitchTurnFromRedToBlue() {
+            public void testSwitchTurnFromBlueToRed() {
                 gameUtils.startNewGame(5, "Simple", "Human", "Human");
                 gameUtils.switchTurn();
 
-                assertFalse(gameUtils.getPlayerRed().isTurn());
-                assertTrue(gameUtils.getPlayerBlue().isTurn());
+                assertFalse(gameUtils.getPlayerBlue().isTurn());
+                assertTrue(gameUtils.getPlayerRed().isTurn());
             }
 
             @Test
-            public void testSwitchTurnFromBlueToRed() {
+            public void testSwitchTurnFromRedToBlue() {
                 gameUtils.startNewGame(5, "Simple", "Human", "Human");
-                gameUtils.getPlayerRed().setTurn(false);
-                gameUtils.getPlayerBlue().setTurn(true);
+                gameUtils.getPlayerRed().setTurn(true);
+                gameUtils.getPlayerBlue().setTurn(false);
 
                 gameUtils.switchTurn();
 
-                assertTrue(gameUtils.getPlayerRed().isTurn());
-                assertFalse(gameUtils.getPlayerBlue().isTurn());
+                assertTrue(gameUtils.getPlayerBlue().isTurn());
+                assertFalse(gameUtils.getPlayerRed().isTurn());
             }
 
             // ---------- MakeMove() Tests ----------
@@ -94,6 +94,9 @@ package com.sosgame.Logic;
             @Test
             public void testMakeMoveByRedPlayer() {
                 gameUtils.startNewGame(5, "Simple", "Human", "Human");
+
+                gameUtils.getPlayerBlue().setTurn(false);
+                gameUtils.getPlayerRed().setTurn(true);
 
                 gameUtils.getPlayerRed().setSelectedLetter('S');
                 gameUtils.makeMove(0, 0);
@@ -111,8 +114,7 @@ package com.sosgame.Logic;
                 gameUtils.startNewGame(5, "Simple", "Human", "Human");
 
                 // Force Blue’s turn
-                gameUtils.getPlayerRed().setTurn(false);
-                gameUtils.getPlayerBlue().setTurn(true);
+
                 gameUtils.getPlayerBlue().setSelectedLetter('O');
 
                 gameUtils.makeMove(1, 1);
@@ -145,11 +147,13 @@ package com.sosgame.Logic;
             public void testMakeMoveMaintainsGameIntegrity() {
                 gameUtils.startNewGame(5, "General", "Human", "Human");
 
+                gameUtils.getPlayerBlue().setSelectedLetter('O');
+                gameUtils.makeMove(0, 1);
+
                 gameUtils.getPlayerRed().setSelectedLetter('S');
                 gameUtils.makeMove(0, 0);
 
-                gameUtils.getPlayerBlue().setSelectedLetter('O');
-                gameUtils.makeMove(0, 1);
+
 
                 assertEquals('S', gameUtils.getGameBoard().getletterBoard()[0][0]);
                 assertEquals('O', gameUtils.getGameBoard().getletterBoard()[0][1]);
