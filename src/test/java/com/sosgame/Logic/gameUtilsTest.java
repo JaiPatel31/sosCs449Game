@@ -17,7 +17,7 @@ package com.sosgame.Logic;
             // ---------- startNewGame() Tests ----------
 
             @Test
-            public void testStartNewGameInitializesCorrectly() {
+            public void testStartNewSimpleGameInitializesCorrectly() {
                 gameUtils.startNewGame(5, "Simple", "Human", "Computer");
 
                 assertNotNull(gameUtils.getGameBoard());
@@ -33,7 +33,23 @@ package com.sosgame.Logic;
                 assertTrue(gameUtils.getPlayerRed().isTurn());
                 assertFalse(gameUtils.getPlayerBlue().isTurn());
             }
+            @Test
+            public void testStartNewGeneralGameInitializesCorrectly() {
+                gameUtils.startNewGame(5, "General", "Human", "Computer");
 
+                assertNotNull(gameUtils.getGameBoard());
+                assertEquals(5, gameUtils.getGameBoard().getSize());
+                assertEquals("General", gameUtils.getGameMode());
+
+                assertEquals("Red", gameUtils.getPlayerRed().getColor());
+                assertEquals("Blue", gameUtils.getPlayerBlue().getColor());
+
+                assertEquals("Human", gameUtils.getPlayerRed().getType());
+                assertEquals("Computer", gameUtils.getPlayerBlue().getType());
+
+                assertTrue(gameUtils.getPlayerRed().isTurn());
+                assertFalse(gameUtils.getPlayerBlue().isTurn());
+            }
             @Test
             public void testStartNewGameResetsPreviousGame() {
                 gameUtils.startNewGame(5, "General", "Human", "Human");

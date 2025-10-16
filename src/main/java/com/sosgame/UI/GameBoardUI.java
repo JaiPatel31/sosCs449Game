@@ -2,6 +2,7 @@ package com.sosgame.UI;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -54,8 +55,12 @@ public class GameBoardUI {
             }else{
                 TurnLabel.setText("Turn: " + (gameUtils.getCurrentPlayer().getColor().equals("Red") ? "Red" : "Blue") + " Player");
             }
-        }catch(Exception e){
-
+        }catch(Exception ex){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Invalid Move");
+            alert.setHeaderText("Cannot make this move");
+            alert.setContentText(ex.getMessage()); // shows “Board size must be between 5 and 11.”
+            alert.showAndWait();
         }
     }
 }

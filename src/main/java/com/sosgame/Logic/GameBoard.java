@@ -9,8 +9,8 @@ public class GameBoard {
 
     // Initialize an empty board with given size
     public GameBoard(int size) {
-        if (size < 5 || size > 11) {
-            throw new IllegalArgumentException("Board size must be between 5 and 11.");
+        if (size < 3 || size > 11) {
+            throw new IllegalArgumentException("Board size must be between 3 and 11.");
         }
         this.size = size;
         this.letterBoard = new char[size][size];
@@ -69,4 +69,5 @@ public class GameBoard {
             }
         }
     }
+
 }

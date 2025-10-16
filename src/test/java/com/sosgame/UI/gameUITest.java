@@ -1,14 +1,19 @@
 package com.sosgame.UI;
 
 import com.sosgame.Logic.GameUtils;
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedConstruction;
 import org.mockito.Mockito;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -23,6 +28,13 @@ public class gameUITest {
     private GameUtils mockGameUtils;
 
     @BeforeAll
+    static void initToolkit() {
+        try {
+            Platform.startup(() -> {});
+        } catch (IllegalStateException e) {
+            // already started, ignore
+        }
+    }
     static void setupEnvironment() {
         System.setProperty("net.bytebuddy.agent.silent", "true");
         try {
@@ -105,19 +117,29 @@ public class gameUITest {
 
     @Test
     public void testStartNewGameShowsAlertOnInvalidSize() {
-        when(mockTopMenu.getBoardSize()).thenReturn(3); // invalid (below 5)
+        when(mockTopMenu.getBoardSize()).thenReturn(3); // invalid
         when(mockTopMenu.getMode()).thenReturn("Simple");
         when(mockRightMenu.getRedType()).thenReturn("Human");
         when(mockLeftMenu.getBlueType()).thenReturn("Computer");
 
         doThrow(new IllegalArgumentException("Board size must be between 5 and 11."))
-                .when(mockGameUtils).startNewGame(anyInt(), anyString(), anyString(), anyString());
+                .when(mockGameUtils)
+                .startNewGame(anyInt(), anyString(), anyString(), anyString());
 
-        // Override Alert.showAndWait() with a stub to avoid launching UI
-        mockStaticAlert();
+        // Mock Alert creation safely
+        try (MockedConstruction<Alert> mocked = mockConstruction(Alert.class,
+                (mock, context) -> when(mock.showAndWait()).thenReturn(Optional.of(ButtonType.OK)))) {
 
-        assertDoesNotThrow(() -> gameUIInstance.startNewGame());
+            // ✅ run inside JavaFX thread
+            Platform.runLater(() -> assertDoesNotThrow(() -> gameUIInstance.startNewGame()));
+
+            // Wait briefly for FX thread to finish
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ignored) {}
+        }
     }
+
 
     // ---------- Utility ----------
 
@@ -133,8 +155,8 @@ public class gameUITest {
     }
 
     private void mockStaticAlert() {
-        // Override Alert.showAndWait() statically for headless testing
         Alert alert = mock(Alert.class);
-        doNothing().when(alert).showAndWait();
+        when(alert.showAndWait()).thenReturn(Optional.of(ButtonType.OK));
     }
+
 }

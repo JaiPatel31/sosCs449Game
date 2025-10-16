@@ -16,14 +16,14 @@ public class gameBoardTest {
 
     @Test
     public void testInvalidBoardSizeTooSmall() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new GameBoard(4));
-        assertEquals("Board size must be between 5 and 11.", exception.getMessage());
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> new GameBoard(2));
+        assertEquals("Board size must be between 3 and 11.", exception.getMessage());
     }
 
     @Test
     public void testInvalidBoardSizeTooLarge() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> new GameBoard(12));
-        assertEquals("Board size must be between 5 and 11.", exception.getMessage());
+        assertEquals("Board size must be between 3 and 11.", exception.getMessage());
     }
 
     @Test

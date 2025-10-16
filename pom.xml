@@ -50,6 +50,12 @@
             <version>5.20.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>21</version> <!-- or match your JavaFX version -->
+        </dependency>
+
     </dependencies>
 
     <build>
