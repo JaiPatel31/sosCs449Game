@@ -30,20 +30,30 @@ public class GameBoardUI {
                 cell.setPrefSize(50, 50);
                 cell.setStyle("-fx-background-color: white; -fx-border-color: black;");
 
+                cell.setUserData(new int[]{i,j});
+
                 cell.setOnAction(e -> handleCellClick(cell));
-                gameBoard.add(cell, j, i);
+                gameBoard.add(cell, i, j);
             }
         }
 
         //Turn Label
-        TurnLabel = new Label("Turn: Red Player or Blue Player");
+        TurnLabel = new Label("Turn: Red Player");
         boardBox.getChildren().addAll(gameBoard, TurnLabel);
         return boardBox;
     }
 
     void handleCellClick(Button cell){
         try {
-
+            if(gameUtils.isGameOver()) return;
+            int[] pos = (int[]) cell.getUserData();
+            gameUtils.MakeMove(pos[0], pos[1]);
+            cell.setText(Character.toString(gameUtils.getCurrentPlayer().getSelectedLetter()));
+            if(gameUtils.isGameOver()){
+                TurnLabel.setText("Game Over! Winner: " + gameUtils.getWinner());
+            }else{
+                TurnLabel.setText("Turn: " + (gameUtils.getCurrentPlayer().getColor().equals("R") ? "Red" : "Blue") + " Player");
+            }
         }catch(Exception e){
 
         }

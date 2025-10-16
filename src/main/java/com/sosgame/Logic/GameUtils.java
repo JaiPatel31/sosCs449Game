@@ -21,7 +21,7 @@ public class GameUtils {
         this.gameBoard = new GameBoard(gameBoard);
     }
 
-    void MakeMove(int row, int col) {
+    public void MakeMove(int row, int col) {
         Player currentPlayer = PlayerRed.isTurn() ? PlayerRed : PlayerBlue;
         gameBoard.placeLetter(row, col, currentPlayer.getSelectedLetter(), currentPlayer.getColor());
         // After placing the letter, switch turns
@@ -51,5 +51,26 @@ public class GameUtils {
     public String getGameMode() {
         return gameMode;
     }
-
+    // Check if the game is over based on players' winner status
+    public boolean isGameOver () {
+        if (PlayerRed.isTurn()) {
+            return PlayerRed.isWinner() || PlayerBlue.isWinner();
+        } else {
+            return PlayerBlue.isWinner() || PlayerRed.isWinner();
+        }
+    }
+    //Return the Winning player
+    public Player getWinner() {
+        if (PlayerRed.isWinner()) {
+            return PlayerRed;
+        } else if (PlayerBlue.isWinner()) {
+            return PlayerBlue;
+        } else {
+            return null; // No winner yet
+        }
+    }
+    //get current player
+    public Player getCurrentPlayer() {
+        return PlayerRed.isTurn() ? PlayerRed : PlayerBlue;
+    }
 }

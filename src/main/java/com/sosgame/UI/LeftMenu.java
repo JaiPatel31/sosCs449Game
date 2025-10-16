@@ -83,4 +83,6 @@ public class LeftMenu {
     public boolean isRecordingEnabled() {
         return recordGame.isSelected();
     }
+
+
 }
