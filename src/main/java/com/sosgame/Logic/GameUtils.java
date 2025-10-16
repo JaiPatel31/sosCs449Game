@@ -1,33 +1,34 @@
 package com.sosgame.Logic;
 
 public class GameUtils {
-    private GameBoard gameBoard;
-    private Player PlayerRed;
-    private Player PlayerBlue;
-    private String gameMode; // "Simple" or "General"
+    private GameBoard gameBoard; // The game board instance
+    private Player PlayerRed;    // Red player
+    private Player PlayerBlue;   // Blue player
+    private String gameMode;     // "Simple" or "General" game mode
 
     // Start a new game with given parameters
     public void startNewGame(int boardSize, String gameMode, String player1Type, String player2Type) {
-        this.gameBoard = new GameBoard(boardSize);
-        this.gameMode = gameMode;
-        this.PlayerRed = new Player("Red", player1Type);
-        this.PlayerBlue = new Player("Blue", player2Type);
-        // Red always starts first
-        this.PlayerRed.setTurn(true);
+        this.gameBoard = new GameBoard(boardSize); // Create new board
+        this.gameMode = gameMode;                  // Set game mode
+        this.PlayerRed = new Player("Red", player1Type);   // Create Red player
+        this.PlayerBlue = new Player("Blue", player2Type); // Create Blue player
+        this.PlayerRed.setTurn(true);  // Red starts first
         this.PlayerBlue.setTurn(false);
     }
 
+    // Copy the board state
     void gameBoard(GameBoard gameBoard) {
         this.gameBoard = new GameBoard(gameBoard);
     }
 
+    // Make a move for the current player
     public void MakeMove(int row, int col) {
-        Player currentPlayer = PlayerRed.isTurn() ? PlayerRed : PlayerBlue;
-        gameBoard.placeLetter(row, col, currentPlayer.getSelectedLetter(), currentPlayer.getColor());
-        // After placing the letter, switch turns
-        SwitchTurn();
+        Player currentPlayer = PlayerRed.isTurn() ? PlayerRed : PlayerBlue; // Get current player
+        gameBoard.placeLetter(row, col, currentPlayer.getSelectedLetter(), currentPlayer.getColor()); // Place letter
+        SwitchTurn(); // Switch turns after move
     }
 
+    // Switch turns between players
     void SwitchTurn() {
         if (PlayerRed.isTurn()) {
             PlayerRed.setTurn(false);
@@ -38,7 +39,7 @@ public class GameUtils {
         }
     }
 
-    //GETTERS
+    // GETTERS
     public GameBoard getGameBoard() {
         return gameBoard;
     }
@@ -51,6 +52,7 @@ public class GameUtils {
     public String getGameMode() {
         return gameMode;
     }
+
     // Check if the game is over based on players' winner status
     public boolean isGameOver () {
         if (PlayerRed.isTurn()) {
@@ -59,7 +61,8 @@ public class GameUtils {
             return PlayerBlue.isWinner() || PlayerRed.isWinner();
         }
     }
-    //Return the Winning player
+
+    // Return the winning player
     public Player getWinner() {
         if (PlayerRed.isWinner()) {
             return PlayerRed;
@@ -69,7 +72,8 @@ public class GameUtils {
             return null; // No winner yet
         }
     }
-    //get current player
+
+    // Get the current player
     public Player getCurrentPlayer() {
         return PlayerRed.isTurn() ? PlayerRed : PlayerBlue;
     }
