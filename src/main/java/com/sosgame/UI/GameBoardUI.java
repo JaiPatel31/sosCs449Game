@@ -38,7 +38,7 @@ public class GameBoardUI {
         }
 
         //Turn Label
-        TurnLabel = new Label("Turn: Red Player");
+        TurnLabel = new Label("Turn: Blue Player");
         boardBox.getChildren().addAll(gameBoard, TurnLabel);
         return boardBox;
     }
@@ -52,7 +52,7 @@ public class GameBoardUI {
             if(gameUtils.isGameOver()){
                 TurnLabel.setText("Game Over! Winner: " + gameUtils.getWinner());
             }else{
-                TurnLabel.setText("Turn: " + (gameUtils.getCurrentPlayer().getColor().equals("R") ? "Red" : "Blue") + " Player");
+                TurnLabel.setText("Turn: " + (gameUtils.getCurrentPlayer().getColor().equals("Red") ? "Red" : "Blue") + " Player");
             }
         }catch(Exception e){
 
