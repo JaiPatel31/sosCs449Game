@@ -56,7 +56,7 @@ public class gameUI {
     // Handles valid board size, starts game with user size
     private void validSize(){
         int size = topMenu.getBoardSize(); // Get user size
-        gameUtils.startNewGame(size, rightMenu.getRedType(), leftMenu.getBlueType(), topMenu.getMode()); // Start game
+        gameUtils.startNewGame(size, leftMenu.getBlueType(),rightMenu.getRedType(), topMenu.getMode()); // Start game
         root.setCenter(null); // Clear center
         root.setCenter(gameBoardUI.createGameBoard(size, gameUtils)); // Add new board
     }
