@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,6 +21,15 @@ public class gameUITest {
     private RightMenu mockRightMenu;
     private GameBoardUI mockGameBoardUI;
     private GameUtils mockGameUtils;
+
+    @BeforeAll
+    static void setupEnvironment() {
+        System.setProperty("net.bytebuddy.agent.silent", "true");
+        try {
+            javafx.embed.swing.JFXPanel fxPanel = new javafx.embed.swing.JFXPanel();
+        } catch (Exception ignored) {
+        }
+    }
 
     @BeforeEach
     public void setUp() {

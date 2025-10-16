@@ -43,7 +43,9 @@ public class RightMenu {
         redS.setToggleGroup(redLetterGroup);
         redO.setToggleGroup(redLetterGroup);
         redS.setSelected(true);//default value
-
+        //Action listeners for radio buttons
+        redO.setOnAction(e->changeSelectedLetter());
+        redS.setOnAction(e->changeSelectedLetter());
         //When Human is selected enable letter selection, otherwise disable it
         humanRed.setOnAction(e -> {
             redS.setDisable(false);
@@ -82,16 +84,13 @@ public class RightMenu {
    public String getRedType(){
         return humanRed.isSelected() ? "Human" : "Computer";
    }
-   public String getRedLetter(){
-        return redS.isSelected() ? "S" : "O";
-   }
-   public boolean isReplayGame(){
-        return replayGame.isPressed();
-   }
-   public boolean isNewGame(){
-        return newGame.isPressed();
+   //change selected letter function for radio buttons
+    private void changeSelectedLetter(){
+        if(redS.isSelected()){
+            gameUtils.getPlayerBlue().setSelectedLetter('S');
+        }else if(redO.isSelected()){
+            gameUtils.getPlayerBlue().setSelectedLetter('O');
+        }
     }
-
-
 
 }
