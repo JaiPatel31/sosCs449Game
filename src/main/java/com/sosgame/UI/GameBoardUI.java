@@ -47,23 +47,38 @@ public class GameBoardUI {
     }
 
     // Handles a cell click event
-    void handleCellClick(Button cell){
+    void handleCellClick(Button cell) {
         try {
-            if(gameUtils.isGameOver()) return; // Do nothing if game is over
-            int[] pos = (int[]) cell.getUserData(); // Get cell position
-            gameUtils.MakeMove(pos[0], pos[1]); // Make move in logic
-            cell.setText(Character.toString(gameUtils.getCurrentPlayer().getSelectedLetter())); // Show letter in cell
-            if(gameUtils.isGameOver()){
-                TurnLabel.setText("Game Over! Winner: " + gameUtils.getWinner()); // Show winner
-            }else{
-                TurnLabel.setText("Turn: " + (gameUtils.getCurrentPlayer().getColor().equals("Red") ? "Red" : "Blue") + " Player"); // Update turn label
+            // Do nothing if the game is over
+            if (gameUtils.isGameOver()) return;
+
+            // Get the cell position from user data
+            int[] pos = (int[]) cell.getUserData();
+
+            // Get the letter selected by the current player
+            char letterPlayed = gameUtils.getCurrentPlayer().getSelectedLetter();
+
+            // Make the move in the game logic
+            gameUtils.makeMove(pos[0], pos[1]);
+
+            // Set the button text to the letter played
+            cell.setText(Character.toString(letterPlayed));
+
+            // Update the turn label based on game state
+            if (gameUtils.isGameOver()) {
+                TurnLabel.setText("Game Over! Winner: " + gameUtils.getWinner());
+            } else {
+                TurnLabel.setText("Turn: " + (gameUtils.getCurrentPlayer().getColor().equals("Red") ? "Red" : "Blue") + " Player");
             }
-        }catch(Exception ex){
-            Alert alert = new Alert(Alert.AlertType.ERROR); // Show error alert
+
+        } catch (Exception ex) {
+            // Show an error alert if the move is invalid
+            Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Invalid Move");
             alert.setHeaderText("Cannot make this move");
-            alert.setContentText(ex.getMessage()); // Show error message
+            alert.setContentText(ex.getMessage());
             alert.showAndWait();
         }
     }
+
 }

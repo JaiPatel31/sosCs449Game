@@ -44,13 +44,14 @@ public class LeftMenu {
         blueO.setToggleGroup(blueLetterGroup);
         blueS.setSelected(true); // Default value: S selected
         // Action listeners for radio buttons
-        blueO.setOnAction(e->changeSelectedLetter()); // Change letter to O
-        blueS.setOnAction(e->changeSelectedLetter()); // Change letter to S
+        blueO.setOnAction(e->changeBlueSelectedLetter()); // Change letter to O
+        blueS.setOnAction(e->changeBlueSelectedLetter()); // Change letter to S
 
         // When Human is selected enable letter selection, otherwise disable it
         humanBlue.setOnAction(e -> {
             blueS.setDisable(false); // Enable S
             blueO.setDisable(false); // Enable O
+            changeBlueSelectedLetter();
         });
         computerBlue.setOnAction(e -> {
             blueS.setDisable(true); // Disable S
@@ -82,7 +83,7 @@ public class LeftMenu {
     }
 
     // Changes the selected letter for Blue player
-    private void changeSelectedLetter(){
+    private void changeBlueSelectedLetter(){
         if(blueS.isSelected()){
             gameUtils.getPlayerBlue().setSelectedLetter('S');
         }else if(blueO.isSelected()){

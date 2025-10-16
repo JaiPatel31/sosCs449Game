@@ -12,8 +12,9 @@ public class GameUtils {
         this.gameMode = gameMode;                  // Set game mode
         this.PlayerRed = new Player("Red", player1Type);   // Create Red player
         this.PlayerBlue = new Player("Blue", player2Type); // Create Blue player
-        this.PlayerRed.setTurn(true);  // Red starts first
-        this.PlayerBlue.setTurn(false);
+        this.PlayerBlue.setTurn(true);//Blue starts first
+        this.PlayerRed.setTurn(false);
+
     }
 
     // Copy the board state
@@ -22,14 +23,14 @@ public class GameUtils {
     }
 
     // Make a move for the current player
-    public void MakeMove(int row, int col) {
+    public void makeMove(int row, int col) {
         Player currentPlayer = PlayerRed.isTurn() ? PlayerRed : PlayerBlue; // Get current player
         gameBoard.placeLetter(row, col, currentPlayer.getSelectedLetter(), currentPlayer.getColor()); // Place letter
-        SwitchTurn(); // Switch turns after move
+        switchTurn(); // Switch turns after move
     }
 
     // Switch turns between players
-    void SwitchTurn() {
+    void switchTurn() {
         if (PlayerRed.isTurn()) {
             PlayerRed.setTurn(false);
             PlayerBlue.setTurn(true);

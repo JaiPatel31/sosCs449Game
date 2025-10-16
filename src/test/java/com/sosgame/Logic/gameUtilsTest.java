@@ -71,7 +71,7 @@ package com.sosgame.Logic;
             @Test
             public void testSwitchTurnFromRedToBlue() {
                 gameUtils.startNewGame(5, "Simple", "Human", "Human");
-                gameUtils.SwitchTurn();
+                gameUtils.switchTurn();
 
                 assertFalse(gameUtils.getPlayerRed().isTurn());
                 assertTrue(gameUtils.getPlayerBlue().isTurn());
@@ -83,7 +83,7 @@ package com.sosgame.Logic;
                 gameUtils.getPlayerRed().setTurn(false);
                 gameUtils.getPlayerBlue().setTurn(true);
 
-                gameUtils.SwitchTurn();
+                gameUtils.switchTurn();
 
                 assertTrue(gameUtils.getPlayerRed().isTurn());
                 assertFalse(gameUtils.getPlayerBlue().isTurn());
@@ -96,7 +96,7 @@ package com.sosgame.Logic;
                 gameUtils.startNewGame(5, "Simple", "Human", "Human");
 
                 gameUtils.getPlayerRed().setSelectedLetter('S');
-                gameUtils.MakeMove(0, 0);
+                gameUtils.makeMove(0, 0);
 
                 assertEquals('S', gameUtils.getGameBoard().getletterBoard()[0][0]);
                 assertEquals('R', gameUtils.getGameBoard().getownerBoard()[0][0]);
@@ -115,7 +115,7 @@ package com.sosgame.Logic;
                 gameUtils.getPlayerBlue().setTurn(true);
                 gameUtils.getPlayerBlue().setSelectedLetter('O');
 
-                gameUtils.MakeMove(1, 1);
+                gameUtils.makeMove(1, 1);
 
                 assertEquals('O', gameUtils.getGameBoard().getletterBoard()[1][1]);
                 assertEquals('B', gameUtils.getGameBoard().getownerBoard()[1][1]);
@@ -130,13 +130,13 @@ package com.sosgame.Logic;
                 gameUtils.startNewGame(5, "Simple", "Human", "Human");
 
                 gameUtils.getPlayerRed().setSelectedLetter('S');
-                gameUtils.MakeMove(0, 0);
+                gameUtils.makeMove(0, 0);
 
                 gameUtils.getPlayerBlue().setTurn(true);
                 gameUtils.getPlayerBlue().setSelectedLetter('O');
 
                 Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                        gameUtils.MakeMove(0, 0));
+                        gameUtils.makeMove(0, 0));
 
                 assertEquals("Cell is already occupied.", exception.getMessage());
             }
@@ -146,10 +146,10 @@ package com.sosgame.Logic;
                 gameUtils.startNewGame(5, "General", "Human", "Human");
 
                 gameUtils.getPlayerRed().setSelectedLetter('S');
-                gameUtils.MakeMove(0, 0);
+                gameUtils.makeMove(0, 0);
 
                 gameUtils.getPlayerBlue().setSelectedLetter('O');
-                gameUtils.MakeMove(0, 1);
+                gameUtils.makeMove(0, 1);
 
                 assertEquals('S', gameUtils.getGameBoard().getletterBoard()[0][0]);
                 assertEquals('O', gameUtils.getGameBoard().getletterBoard()[0][1]);

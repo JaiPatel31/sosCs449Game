@@ -45,8 +45,8 @@ public class RightMenu {
         redO.setToggleGroup(redLetterGroup);
         redS.setSelected(true); // Default value: S selected
         // Action listeners for radio buttons
-        redO.setOnAction(e->changeSelectedLetter()); // Change letter to O
-        redS.setOnAction(e->changeSelectedLetter()); // Change letter to S
+        redO.setOnAction(e->changeRedSelectedLetter()); // Change letter to O
+        redS.setOnAction(e->changeRedSelectedLetter()); // Change letter to S
         // When Human is selected enable letter selection, otherwise disable it
         humanRed.setOnAction(e -> {
             redS.setDisable(false); // Enable S
@@ -85,11 +85,11 @@ public class RightMenu {
         return humanRed.isSelected() ? "Human" : "Computer";
    }
    // Changes the selected letter for Red player
-    private void changeSelectedLetter(){
+    private void changeRedSelectedLetter(){
         if(redS.isSelected()){
-            gameUtils.getPlayerBlue().setSelectedLetter('S');
+            gameUtils.getPlayerRed().setSelectedLetter('S');
         }else if(redO.isSelected()){
-            gameUtils.getPlayerBlue().setSelectedLetter('O');
+            gameUtils.getPlayerRed().setSelectedLetter('O');
         }
     }
 
