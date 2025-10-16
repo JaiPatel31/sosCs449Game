@@ -113,6 +113,41 @@ public class gameUITest {
         assertNotNull(((BorderPane) getPrivateField(gameUIInstance, "root")).getCenter());
     }
 
+    @Test
+    public void testGameModeDefaultsToSimpleInUI() {
+        when(mockTopMenu.getMode()).thenReturn("Simple");
+        when(mockTopMenu.getBoardSize()).thenReturn(5);
+        when(mockRightMenu.getRedType()).thenReturn("Human");
+        when(mockLeftMenu.getBlueType()).thenReturn("Human");
+        when(mockGameBoardUI.createGameBoard(anyInt(), any())).thenReturn(new VBox());
+
+        gameUIInstance.startNewGame();
+
+        verify(mockGameUtils).startNewGame(5, "Human", "Human", "Simple");
+    }
+
+    @Test
+    public void testStartNewGameResetsPreviousGameState() {
+        when(mockTopMenu.getBoardSize()).thenReturn(7);
+        when(mockTopMenu.getMode()).thenReturn("General");
+        when(mockRightMenu.getRedType()).thenReturn("Human");
+        when(mockLeftMenu.getBlueType()).thenReturn("Computer");
+        VBox newBoard = new VBox();
+        when(mockGameBoardUI.createGameBoard(anyInt(), any())).thenReturn(newBoard);
+
+        BorderPane root = (BorderPane) getPrivateField(gameUIInstance, "root");
+        VBox oldBoard = new VBox();
+        Platform.runLater(() -> {
+            root.setCenter(oldBoard);
+            gameUIInstance.startNewGame();
+            // After starting new game, the center should be replaced
+            assertEquals(newBoard, root.getCenter());
+            verify(mockGameUtils).startNewGame(7, "Human", "Computer", "General");
+        });
+
+        try { Thread.sleep(500); } catch (InterruptedException ignored) {}
+    }
+
     // ---------- startNewGame() Failure Path ----------
 
     @Test
@@ -137,6 +172,32 @@ public class gameUITest {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException ignored) {}
+        }
+    }
+
+    @Test
+    public void testStartNewGameDefaultsToBoardSize5OnInvalidInput() {
+        when(mockTopMenu.getBoardSize()).thenReturn(3); // invalid size
+        when(mockTopMenu.getMode()).thenReturn("General");
+        when(mockRightMenu.getRedType()).thenReturn("Human");
+        when(mockLeftMenu.getBlueType()).thenReturn("Human");
+        when(mockGameBoardUI.createGameBoard(anyInt(), any())).thenReturn(new VBox());
+
+        // Simulate exception thrown for invalid size
+        doThrow(new IllegalArgumentException("Board size must be between 5 and 11."))
+                .when(mockGameUtils)
+                .startNewGame(anyInt(), anyString(), anyString(), anyString());
+
+        try (MockedConstruction<Alert> mocked = mockConstruction(Alert.class,
+                (mock, context) -> when(mock.showAndWait()).thenReturn(Optional.of(ButtonType.OK)))) {
+
+            Platform.runLater(() -> gameUIInstance.startNewGame());
+
+            // Wait for FX thread
+            try { Thread.sleep(500); } catch (InterruptedException ignored) {}
+
+            // Should fall back to default size 5 and selected mode
+            verify(mockGameUtils).startNewGame(5, "Human", "Human", "General");
         }
     }
 

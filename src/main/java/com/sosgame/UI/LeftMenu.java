@@ -79,14 +79,6 @@ public class LeftMenu {
         return humanBlue.isSelected() ? "Human" : "Computer";
     }
 
-    public char getBlueLetter() {
-        return blueS.isSelected() ? 'S' : 'O';
-    }
-
-    public boolean isRecordingEnabled() {
-        return recordGame.isSelected();
-    }
-
     private void changeSelectedLetter(){
         if(blueS.isSelected()){
             gameUtils.getPlayerBlue().setSelectedLetter('S');
