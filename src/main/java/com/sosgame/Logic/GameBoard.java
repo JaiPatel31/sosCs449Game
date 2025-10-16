@@ -10,17 +10,11 @@ public class GameBoard {
     // Initialize an empty board with given size
     public GameBoard(int size) {
         if (size < 3 || size > 11) {
+            buildBoard(5);
             throw new IllegalArgumentException("Board size must be between 3 and 11.");
         }
-        this.size = size;
-        this.letterBoard = new char[size][size];
-        this.ownerBoard = new char[size][size];
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                this.letterBoard[i][j] = ' ';
-                this.ownerBoard[i][j] = ' ';
-            }
-        }
+        buildBoard(size);
+
     }
 
     // Initialize the board with a predefined state
@@ -34,6 +28,16 @@ public class GameBoard {
         }
     }
 
+    private void buildBoard(int size){
+        this.letterBoard = new char[size][size];
+        this.ownerBoard = new char[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                this.letterBoard[i][j] = ' ';
+                this.ownerBoard[i][j] = ' ';
+            }
+        }
+    }
     // Get the current state of the owner board
     public char[][] getownerBoard() {
         return  ownerBoard;

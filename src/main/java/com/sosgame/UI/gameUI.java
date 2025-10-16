@@ -34,18 +34,29 @@ public class gameUI {
     //Start new game function
     public void startNewGame(){
         try {
-            int size = topMenu.getBoardSize();
-            gameUtils.startNewGame(size, rightMenu.getRedType(), leftMenu.getBlueType(), topMenu.getMode());
-            root.setCenter(null);
-            root.setCenter(gameBoardUI.createGameBoard(size, gameUtils));
+            validSize();
         }
         catch(IllegalArgumentException ex){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Invalid Settings");
-            alert.setHeaderText("Cannot start new game");
-            alert.setContentText(ex.getMessage()); // shows “Board size must be between 5 and 11.”
-            alert.showAndWait();
+            illegalSize(ex);
         }
+    }
+
+    private void illegalSize(IllegalArgumentException ex){
+        gameUtils.startNewGame(5, rightMenu.getRedType(), leftMenu.getBlueType(), topMenu.getMode());
+        root.setCenter(null);
+        root.setCenter(gameBoardUI.createGameBoard(5, gameUtils));
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Invalid Settings");
+        alert.setHeaderText("Started Game with default value 5");
+        alert.setContentText(ex.getMessage()); // shows “Board size must be between 5 and 11.”
+        alert.showAndWait();
+    }
+
+    private void validSize(){
+        int size = topMenu.getBoardSize();
+        gameUtils.startNewGame(size, rightMenu.getRedType(), leftMenu.getBlueType(), topMenu.getMode());
+        root.setCenter(null);
+        root.setCenter(gameBoardUI.createGameBoard(size, gameUtils));
     }
  }
 
