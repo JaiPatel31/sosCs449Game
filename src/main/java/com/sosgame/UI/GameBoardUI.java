@@ -57,14 +57,12 @@ public class GameBoardUI {
 
             // Get the letter selected by the current player
             char letterPlayed = gameUtils.getCurrentPlayer().getSelectedLetter();
-            //set the color before making the move
-            cell.setStyle("-fx-background-color: " + (gameUtils.getCurrentPlayer().getColor().equals("Red") ? "lightcoral" : "lightblue") + "; -fx-border-color: black;");
             // Make the move in the game logic
             gameUtils.makeMove(pos[0], pos[1]);
 
             // Set the button text to the letter played and update its style
             cell.setText(Character.toString(letterPlayed));
-
+            cell.setStyle("-fx-background-color: " + (gameUtils.getCurrentPlayer().getColor().equals("Red") ?  "lightblue": "lightcoral") + "; -fx-border-color: black;");
 
             // Update the turn label based on game state
             if (gameUtils.isGameOver()) {

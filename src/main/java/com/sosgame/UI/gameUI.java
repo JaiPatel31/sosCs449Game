@@ -44,8 +44,8 @@ public class gameUI {
     // Handles invalid board size, starts game with default size
     private void illegalSize(IllegalArgumentException ex){
         gameUtils.startNewGame(5, rightMenu.getRedType(), leftMenu.getBlueType(), topMenu.getMode()); // Default size 5
-        root.setCenter(null); // Clear center
-        root.setCenter(gameBoardUI.createGameBoard(5, gameUtils)); // Add new board
+
+        resetGame(5);
         Alert alert = new Alert(Alert.AlertType.ERROR); // Show error alert
         alert.setTitle("Invalid Settings");
         alert.setHeaderText("Started Game with default value 5");
@@ -55,9 +55,17 @@ public class gameUI {
 
     // Handles valid board size, starts game with user size
     private void validSize(){
-        int size = topMenu.getBoardSize(); // Get user size
+        int size = topMenu.getBoardSize();
         gameUtils.startNewGame(size, leftMenu.getBlueType(),rightMenu.getRedType(), topMenu.getMode()); // Start game
+        resetGame(size);
+    }
+
+    private void resetGame(int size){
         root.setCenter(null); // Clear center
         root.setCenter(gameBoardUI.createGameBoard(size, gameUtils)); // Add new board
+        root.setLeft(null);
+        root.setRight(null);
+        root.setLeft(leftMenu.createLeftMenu(gameUtils)); // Re-add left menu
+        root.setRight(rightMenu.createRightMenu(gameUtils,this)); // Re-add right menu
     }
  }
