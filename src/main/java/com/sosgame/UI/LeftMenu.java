@@ -5,11 +5,10 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import com.sosgame.Logic.GameUtils;
+import com.sosgame.Logic.Game;
 
 public class LeftMenu {
     private RadioButton humanBlue; // Radio button for Human player
@@ -17,11 +16,11 @@ public class LeftMenu {
     private RadioButton blueS; // Radio button for letter S
     private RadioButton blueO; // Radio button for letter O
     private CheckBox recordGame; // Checkbox to record the game
-    private GameUtils gameUtils; // Game logic controller
+    private Game game; // Game logic controller
 
     // Creates the left menu UI for Blue player options
-    public VBox createLeftMenu(GameUtils gameController) {
-        this.gameUtils = gameController;
+    public VBox createLeftMenu(Game gameController) {
+        this.game = gameController;
         VBox leftMenu = new VBox(20); // Main container for left menu
         leftMenu.setPadding(new Insets(10));
 
@@ -85,9 +84,9 @@ public class LeftMenu {
     // Changes the selected letter for Blue player
     private void changeBlueSelectedLetter(){
         if(blueS.isSelected()){
-            gameUtils.getPlayerBlue().setSelectedLetter('S');
+            game.getPlayerBlue().setSelectedLetter('S');
         }else if(blueO.isSelected()){
-            gameUtils.getPlayerBlue().setSelectedLetter('O');
+            game.getPlayerBlue().setSelectedLetter('O');
         }
     }
 

@@ -7,15 +7,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import com.sosgame.Logic.GameUtils;
+import com.sosgame.Logic.Game;
 
 public class GameBoardUI {
     private Label TurnLabel; // Displays whose turn it is
-    private GameUtils gameUtils; // Game logic controller
+    private Game game; // Game logic controller
 
     // Creates and returns the game board UI
-    public VBox createGameBoard(int size,GameUtils gameController){
-        gameUtils = gameController;
+    public VBox createGameBoard(int size, Game gameController){
+        game = gameController;
         VBox boardBox = new VBox(); // Main container for the board
         boardBox.setAlignment(Pos.CENTER);
 
@@ -50,25 +50,25 @@ public class GameBoardUI {
     void handleCellClick(Button cell) {
         try {
             // Do nothing if the game is over
-            if (gameUtils.isGameOver()) return;
+            if (game.isGameOver()) return;
 
             // Get the cell position from user data
             int[] pos = (int[]) cell.getUserData();
 
             // Get the letter selected by the current player
-            char letterPlayed = gameUtils.getCurrentPlayer().getSelectedLetter();
+            char letterPlayed = game.getCurrentPlayer().getSelectedLetter();
             // Make the move in the game logic
-            gameUtils.makeMove(pos[0], pos[1]);
+            game.makeMove(pos[0], pos[1]);
 
             // Set the button text to the letter played and update its style
             cell.setText(Character.toString(letterPlayed));
-            cell.setStyle("-fx-background-color: " + (gameUtils.getCurrentPlayer().getColor().equals("Red") ?  "lightblue": "lightcoral") + "; -fx-border-color: black;");
+            cell.setStyle("-fx-background-color: " + (game.getCurrentPlayer().getColor().equals("Red") ?  "lightblue": "lightcoral") + "; -fx-border-color: black;");
 
             // Update the turn label based on game state
-            if (gameUtils.isGameOver()) {
-                TurnLabel.setText("Game Over! Winner: " + gameUtils.getWinner());
+            if (game.isGameOver()) {
+                TurnLabel.setText("Game Over! Winner: " + game.getWinner());
             } else {
-                TurnLabel.setText("Turn: " + (gameUtils.getCurrentPlayer().getColor().equals("Red") ? "Red" : "Blue") + " Player");
+                TurnLabel.setText("Turn: " + (game.getCurrentPlayer().getColor().equals("Red") ? "Red" : "Blue") + " Player");
             }
 
         } catch (Exception ex) {

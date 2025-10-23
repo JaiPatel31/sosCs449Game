@@ -1,7 +1,7 @@
 package com.sosgame.UI;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.*;
-import com.sosgame.Logic.GameUtils;
+import com.sosgame.Logic.Game;
 
 public class gameUI {
     private TopMenu topMenu; // Top menu bar
@@ -9,21 +9,21 @@ public class gameUI {
     private RightMenu rightMenu; // Right menu panel
     private GameBoardUI gameBoardUI; // Game board UI
     private BorderPane root; // Main layout container
-    private GameUtils gameUtils; // Game logic controller
+    private Game game; // Game logic controller
 
     // Creates the main GUI and returns the root layout
     public BorderPane createGUI(){
-        gameUtils = new GameUtils(); // Initialize game logic
+        game = new Game(); // Initialize game logic
         root = new BorderPane(); // Create main layout
 
         topMenu = new TopMenu(); // Create top menu
-        root.setTop(topMenu.createTopMenu(gameUtils)); // Add top menu
+        root.setTop(topMenu.createTopMenu(game)); // Add top menu
 
         leftMenu = new LeftMenu(); // Create left menu
-        root.setLeft(leftMenu.createLeftMenu(gameUtils)); // Add left menu
+        root.setLeft(leftMenu.createLeftMenu(game)); // Add left menu
 
         rightMenu = new RightMenu(); // Create right menu
-        root.setRight(rightMenu.createRightMenu(gameUtils,this)); // Add right menu
+        root.setRight(rightMenu.createRightMenu(game,this)); // Add right menu
 
         gameBoardUI = new GameBoardUI(); // Create game board UI
         startNewGame(); // Start a new game
@@ -43,7 +43,7 @@ public class gameUI {
 
     // Handles invalid board size, starts game with default size
     private void illegalSize(IllegalArgumentException ex){
-        gameUtils.startNewGame(5, topMenu.getMode(),rightMenu.getRedType(), leftMenu.getBlueType()); // Default size 5
+        game.startNewGame(5, topMenu.getMode(),rightMenu.getRedType(), leftMenu.getBlueType()); // Default size 5
 
         resetGame(5);
         Alert alert = new Alert(Alert.AlertType.ERROR); // Show error alert
@@ -56,16 +56,16 @@ public class gameUI {
     // Handles valid board size, starts game with user size
     private void validSize(){
         int size = topMenu.getBoardSize();
-        gameUtils.startNewGame(size, topMenu.getMode(),rightMenu.getRedType(), leftMenu.getBlueType()); // Start game
+        game.startNewGame(size, topMenu.getMode(),rightMenu.getRedType(), leftMenu.getBlueType()); // Start game
         resetGame(size);
     }
 
     private void resetGame(int size){
         root.setCenter(null); // Clear center
-        root.setCenter(gameBoardUI.createGameBoard(size, gameUtils)); // Add new board
+        root.setCenter(gameBoardUI.createGameBoard(size, game)); // Add new board
         root.setLeft(null);
         root.setRight(null);
-        root.setLeft(leftMenu.createLeftMenu(gameUtils)); // Re-add left menu
-        root.setRight(rightMenu.createRightMenu(gameUtils,this)); // Re-add right menu
+        root.setLeft(leftMenu.createLeftMenu(game)); // Re-add left menu
+        root.setRight(rightMenu.createRightMenu(game,this)); // Re-add right menu
     }
  }

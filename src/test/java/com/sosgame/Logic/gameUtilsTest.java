@@ -7,157 +7,157 @@ package com.sosgame.Logic;
 
         public class gameUtilsTest {
 
-            private GameUtils gameUtils;
+            private Game game;
 
             @BeforeEach
             public void setUp() {
-                gameUtils = new GameUtils();
+                game = new Game();
             }
 
             // ---------- startNewGame() Tests ----------
 
             @Test
             public void testStartNewSimpleGameInitializesCorrectly() {
-                gameUtils.startNewGame(5, "Simple", "Human", "Computer");
+                game.startNewGame(5, "Simple", "Human", "Computer");
 
-                assertNotNull(gameUtils.getGameBoard());
-                assertEquals(5, gameUtils.getGameBoard().getSize());
-                assertEquals("Simple", gameUtils.getGameMode());
+                assertNotNull(game.getGameBoard());
+                assertEquals(5, game.getGameBoard().getSize());
+                assertEquals("Simple", game.getGameMode());
 
-                assertEquals("Red", gameUtils.getPlayerRed().getColor());
-                assertEquals("Blue", gameUtils.getPlayerBlue().getColor());
+                assertEquals("Red", game.getPlayerRed().getColor());
+                assertEquals("Blue", game.getPlayerBlue().getColor());
 
-                assertEquals("Human", gameUtils.getPlayerRed().getType());
-                assertEquals("Computer", gameUtils.getPlayerBlue().getType());
+                assertEquals("Human", game.getPlayerRed().getType());
+                assertEquals("Computer", game.getPlayerBlue().getType());
 
-                assertTrue(gameUtils.getPlayerBlue().isTurn());
-                assertFalse(gameUtils.getPlayerRed().isTurn());
+                assertTrue(game.getPlayerBlue().isTurn());
+                assertFalse(game.getPlayerRed().isTurn());
             }
             @Test
             public void testStartNewGeneralGameInitializesCorrectly() {
-                gameUtils.startNewGame(5, "General", "Human", "Computer");
+                game.startNewGame(5, "General", "Human", "Computer");
 
-                assertNotNull(gameUtils.getGameBoard());
-                assertEquals(5, gameUtils.getGameBoard().getSize());
-                assertEquals("General", gameUtils.getGameMode());
+                assertNotNull(game.getGameBoard());
+                assertEquals(5, game.getGameBoard().getSize());
+                assertEquals("General", game.getGameMode());
 
-                assertEquals("Red", gameUtils.getPlayerRed().getColor());
-                assertEquals("Blue", gameUtils.getPlayerBlue().getColor());
+                assertEquals("Red", game.getPlayerRed().getColor());
+                assertEquals("Blue", game.getPlayerBlue().getColor());
 
-                assertEquals("Human", gameUtils.getPlayerRed().getType());
-                assertEquals("Computer", gameUtils.getPlayerBlue().getType());
+                assertEquals("Human", game.getPlayerRed().getType());
+                assertEquals("Computer", game.getPlayerBlue().getType());
 
-                assertTrue(gameUtils.getPlayerBlue().isTurn());
-                assertFalse(gameUtils.getPlayerRed().isTurn());
+                assertTrue(game.getPlayerBlue().isTurn());
+                assertFalse(game.getPlayerRed().isTurn());
             }
             @Test
             public void testStartNewGameResetsPreviousGame() {
-                gameUtils.startNewGame(5, "General", "Human", "Human");
-                gameUtils.getGameBoard().placeLetter(1, 1, 'S', "Red");
+                game.startNewGame(5, "General", "Human", "Human");
+                game.getGameBoard().placeLetter(1, 1, 'S', "Red");
 
                 // Start a new game should reset everything
-                gameUtils.startNewGame(6, "Simple", "AI", "Human");
+                game.startNewGame(6, "Simple", "AI", "Human");
 
-                assertEquals(6, gameUtils.getGameBoard().getSize());
-                assertEquals("Simple", gameUtils.getGameMode());
-                assertTrue(gameUtils.getPlayerBlue().isTurn());
-                assertFalse(gameUtils.getPlayerRed().isTurn());
-                assertEquals("AI", gameUtils.getPlayerRed().getType());
-                assertEquals("Human", gameUtils.getPlayerBlue().getType());
+                assertEquals(6, game.getGameBoard().getSize());
+                assertEquals("Simple", game.getGameMode());
+                assertTrue(game.getPlayerBlue().isTurn());
+                assertFalse(game.getPlayerRed().isTurn());
+                assertEquals("AI", game.getPlayerRed().getType());
+                assertEquals("Human", game.getPlayerBlue().getType());
             }
 
             // ---------- SwitchTurn() Tests ----------
 
             @Test
             public void testSwitchTurnFromBlueToRed() {
-                gameUtils.startNewGame(5, "Simple", "Human", "Human");
-                gameUtils.switchTurn();
+                game.startNewGame(5, "Simple", "Human", "Human");
+                game.switchTurn();
 
-                assertFalse(gameUtils.getPlayerBlue().isTurn());
-                assertTrue(gameUtils.getPlayerRed().isTurn());
+                assertFalse(game.getPlayerBlue().isTurn());
+                assertTrue(game.getPlayerRed().isTurn());
             }
 
             @Test
             public void testSwitchTurnFromRedToBlue() {
-                gameUtils.startNewGame(5, "Simple", "Human", "Human");
-                gameUtils.getPlayerRed().setTurn(true);
-                gameUtils.getPlayerBlue().setTurn(false);
+                game.startNewGame(5, "Simple", "Human", "Human");
+                game.getPlayerRed().setTurn(true);
+                game.getPlayerBlue().setTurn(false);
 
-                gameUtils.switchTurn();
+                game.switchTurn();
 
-                assertTrue(gameUtils.getPlayerBlue().isTurn());
-                assertFalse(gameUtils.getPlayerRed().isTurn());
+                assertTrue(game.getPlayerBlue().isTurn());
+                assertFalse(game.getPlayerRed().isTurn());
             }
 
             // ---------- MakeMove() Tests ----------
 
             @Test
             public void testMakeMoveByRedPlayer() {
-                gameUtils.startNewGame(5, "Simple", "Human", "Human");
+                game.startNewGame(5, "Simple", "Human", "Human");
 
-                gameUtils.getPlayerBlue().setTurn(false);
-                gameUtils.getPlayerRed().setTurn(true);
+                game.getPlayerBlue().setTurn(false);
+                game.getPlayerRed().setTurn(true);
 
-                gameUtils.getPlayerRed().setSelectedLetter('S');
-                gameUtils.makeMove(0, 0);
+                game.getPlayerRed().setSelectedLetter('S');
+                game.makeMove(0, 0);
 
-                assertEquals('S', gameUtils.getGameBoard().getletterBoard()[0][0]);
-                assertEquals('R', gameUtils.getGameBoard().getownerBoard()[0][0]);
+                assertEquals('S', game.getGameBoard().getletterBoard()[0][0]);
+                assertEquals('R', game.getGameBoard().getownerBoard()[0][0]);
 
                 // Turn should now switch to Blue
-                assertFalse(gameUtils.getPlayerRed().isTurn());
-                assertTrue(gameUtils.getPlayerBlue().isTurn());
+                assertFalse(game.getPlayerRed().isTurn());
+                assertTrue(game.getPlayerBlue().isTurn());
             }
 
             @Test
             public void testMakeMoveByBluePlayer() {
-                gameUtils.startNewGame(5, "Simple", "Human", "Human");
+                game.startNewGame(5, "Simple", "Human", "Human");
 
                 // Force Blue’s turn
 
-                gameUtils.getPlayerBlue().setSelectedLetter('O');
+                game.getPlayerBlue().setSelectedLetter('O');
 
-                gameUtils.makeMove(1, 1);
+                game.makeMove(1, 1);
 
-                assertEquals('O', gameUtils.getGameBoard().getletterBoard()[1][1]);
-                assertEquals('B', gameUtils.getGameBoard().getownerBoard()[1][1]);
+                assertEquals('O', game.getGameBoard().getletterBoard()[1][1]);
+                assertEquals('B', game.getGameBoard().getownerBoard()[1][1]);
 
                 // Turn should now switch to Red
-                assertTrue(gameUtils.getPlayerRed().isTurn());
-                assertFalse(gameUtils.getPlayerBlue().isTurn());
+                assertTrue(game.getPlayerRed().isTurn());
+                assertFalse(game.getPlayerBlue().isTurn());
             }
 
             @Test
             public void testMakeMoveThrowsWhenInvalidCell() {
-                gameUtils.startNewGame(5, "Simple", "Human", "Human");
+                game.startNewGame(5, "Simple", "Human", "Human");
 
-                gameUtils.getPlayerRed().setSelectedLetter('S');
-                gameUtils.makeMove(0, 0);
+                game.getPlayerRed().setSelectedLetter('S');
+                game.makeMove(0, 0);
 
-                gameUtils.getPlayerBlue().setTurn(true);
-                gameUtils.getPlayerBlue().setSelectedLetter('O');
+                game.getPlayerBlue().setTurn(true);
+                game.getPlayerBlue().setSelectedLetter('O');
 
                 Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                        gameUtils.makeMove(0, 0));
+                        game.makeMove(0, 0));
 
                 assertEquals("Cell is already occupied.", exception.getMessage());
             }
 
             @Test
             public void testMakeMoveMaintainsGameIntegrity() {
-                gameUtils.startNewGame(5, "General", "Human", "Human");
+                game.startNewGame(5, "General", "Human", "Human");
 
-                gameUtils.getPlayerBlue().setSelectedLetter('O');
-                gameUtils.makeMove(0, 1);
+                game.getPlayerBlue().setSelectedLetter('O');
+                game.makeMove(0, 1);
 
-                gameUtils.getPlayerRed().setSelectedLetter('S');
-                gameUtils.makeMove(0, 0);
+                game.getPlayerRed().setSelectedLetter('S');
+                game.makeMove(0, 0);
 
 
 
-                assertEquals('S', gameUtils.getGameBoard().getletterBoard()[0][0]);
-                assertEquals('O', gameUtils.getGameBoard().getletterBoard()[0][1]);
-                assertEquals('R', gameUtils.getGameBoard().getownerBoard()[0][0]);
-                assertEquals('B', gameUtils.getGameBoard().getownerBoard()[0][1]);
+                assertEquals('S', game.getGameBoard().getletterBoard()[0][0]);
+                assertEquals('O', game.getGameBoard().getletterBoard()[0][1]);
+                assertEquals('R', game.getGameBoard().getownerBoard()[0][0]);
+                assertEquals('B', game.getGameBoard().getownerBoard()[0][1]);
             }
         }
