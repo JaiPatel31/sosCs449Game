@@ -44,5 +44,7 @@ public abstract class Game {
     public boolean isGameOver() {
         return gameOver;
     }
+
+    public abstract boolean checkWin(Player currentPlayer);
 }
 
