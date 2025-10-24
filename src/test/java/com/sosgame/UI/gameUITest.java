@@ -1,15 +1,17 @@
 package com.sosgame.UI;
 
-import com.sosgame.Logic.Game;
+import com.sosgame.Logic.GameUtils;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
+import org.mockito.Mockito;
 
 import java.util.Optional;
 
@@ -23,7 +25,7 @@ public class gameUITest {
     private LeftMenu mockLeftMenu;
     private RightMenu mockRightMenu;
     private GameBoardUI mockGameBoardUI;
-    private Game mockGame;
+    private GameUtils mockGameUtils;
 
     @BeforeAll
     static void initToolkit() {
@@ -49,7 +51,7 @@ public class gameUITest {
         mockLeftMenu = mock(LeftMenu.class);
         mockRightMenu = mock(RightMenu.class);
         mockGameBoardUI = mock(GameBoardUI.class);
-        mockGame = mock(Game.class);
+        mockGameUtils = mock(GameUtils.class);
 
         // Inject mocks using reflection (since fields are private)
         try {
@@ -71,7 +73,7 @@ public class gameUITest {
 
             var gameUtilsField = gameUI.class.getDeclaredField("gameUtils");
             gameUtilsField.setAccessible(true);
-            gameUtilsField.set(gameUIInstance, mockGame);
+            gameUtilsField.set(gameUIInstance, mockGameUtils);
 
             var rootField = gameUI.class.getDeclaredField("root");
             rootField.setAccessible(true);
@@ -111,7 +113,7 @@ public class gameUITest {
         gameUIInstance.startNewGame();
 
         // Verify that GameUtils.startNewGame was called with correct arguments
-        verify(mockGame, times(1)).startNewGame(5, "Simple", "Human", "Computer");
+        verify(mockGameUtils, times(1)).startNewGame(5, "Simple", "Human", "Computer");
         // Check that the game board is set in the center of the UI
         assertNotNull(((BorderPane) getPrivateField(gameUIInstance, "root")).getCenter());
     }
@@ -126,7 +128,7 @@ public class gameUITest {
 
         gameUIInstance.startNewGame();
 
-        verify(mockGame).startNewGame(5, "Simple","Human", "Human");
+        verify(mockGameUtils).startNewGame(5, "Simple","Human", "Human");
     }
 
     @Test
@@ -145,7 +147,7 @@ public class gameUITest {
             gameUIInstance.startNewGame();
             // After starting new game, the center should be replaced
             assertEquals(newBoard, root.getCenter());
-            verify(mockGame).startNewGame(7,"General", "Human", "Computer" );
+            verify(mockGameUtils).startNewGame(7,"General", "Human", "Computer" );
         });
 
         try { Thread.sleep(500); } catch (InterruptedException ignored) {}
@@ -161,7 +163,7 @@ public class gameUITest {
         when(mockLeftMenu.getBlueType()).thenReturn("Computer");
 
         doThrow(new IllegalArgumentException("Board size must be between 5 and 11."))
-                .when(mockGame)
+                .when(mockGameUtils)
                 .startNewGame(anyInt(), anyString(), anyString(), anyString());
 
         // Mock Alert creation safely
@@ -188,7 +190,7 @@ public class gameUITest {
 
         // Simulate exception thrown for invalid size
         doThrow(new IllegalArgumentException("Board size must be between 5 and 11."))
-                .when(mockGame)
+                .when(mockGameUtils)
                 .startNewGame(anyInt(), anyString(), anyString(), anyString());
 
         try (MockedConstruction<Alert> mocked = mockConstruction(Alert.class,
@@ -200,7 +202,7 @@ public class gameUITest {
             try { Thread.sleep(500); } catch (InterruptedException ignored) {}
 
             // Should fall back to default size 5 and selected mode
-            verify(mockGame).startNewGame(5, "General", "Human", "Human" );
+            verify(mockGameUtils).startNewGame(5, "General", "Human", "Human" );
         }
     }
 

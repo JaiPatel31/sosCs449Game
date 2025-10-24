@@ -1,6 +1,6 @@
 package com.sosgame.UI;
 
-import com.sosgame.Logic.Game;
+import com.sosgame.Logic.GameUtils;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -15,11 +15,11 @@ public class TopMenu {
     private RadioButton simpleMode; // Radio button for Simple mode
     private RadioButton generalMode; // Radio button for General mode
     private TextField boardSizeInput; // Input field for board size
-    private Game game; // Game logic controller
+    private GameUtils gameUtils; // Game logic controller
 
     // Creates the top menu bar UI
-    public  Node createTopMenu(Game gameController) {
-        game = gameController;
+    public  Node createTopMenu(GameUtils gameController) {
+        gameUtils = gameController;
         // Top Bar container
         HBox topMenu = new HBox(20);
         topMenu.setPadding(new Insets(10));

@@ -1,6 +1,6 @@
 package com.sosgame.Logic;
 
-public class Game {
+public class GameUtils {
     private GameBoard gameBoard; // The game board instance
     private Player PlayerRed;    // Red player
     private Player PlayerBlue;   // Blue player
