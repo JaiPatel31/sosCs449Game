@@ -1,19 +1,22 @@
 package com.sosgame.Logic;
 
 public class GameUtils {
-    private GameBoard gameBoard; // The game board instance
-    private Player PlayerRed;    // Red player
-    private Player PlayerBlue;   // Blue player
-    private String gameMode;     // "Simple" or "General" game mode
-
+    public Game game;
     // Start a new game with given parameters
     public void startNewGame(int boardSize, String gameMode, String player1Type, String player2Type) {
-        this.gameBoard = new GameBoard(boardSize); // Create new board
-        this.gameMode = gameMode;                  // Set game mode
-        this.PlayerRed = new Player("Red", player1Type);   // Create Red player
-        this.PlayerBlue = new Player("Blue", player2Type); // Create Blue player
-        this.PlayerBlue.setTurn(true);//Blue starts first
-        this.PlayerRed.setTurn(false);
+        GameBoard gameBoard = new GameBoard(boardSize); // Create new game board
+        Player playerRed = new Player("Red",player1Type);
+        Player playerBlue = new Player("Blue",player2Type);
+        playerBlue.isTurn = true;//Blue starts first
+
+        // Initialize the appropriate game mode
+        if (gameMode.equals("Simple")) {
+            game = new SimpleGame(gameBoard, playerRed, playerBlue);
+        } else if (gameMode.equals("General")) {
+            game = new GeneralGame(gameBoard, playerRed, playerBlue);
+        } else {
+            throw new IllegalArgumentException("Invalid game mode: " + gameMode);
+        }
 
     }
 
