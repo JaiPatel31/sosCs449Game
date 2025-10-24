@@ -15,5 +15,34 @@ public abstract class Game {
         this.playerBlue.setTurn(true);
         this.playerRed.setTurn(false);
     }
+    // Initialize game state
+    public void initialize() {
+        playerRed.resetScore();
+        playerBlue.resetScore();
+        playerRed.setWinner(false);
+        playerBlue.setWinner(false);
+        gameOver = false;
+    }
+
+    //Getters
+    public GameBoard getBoard() {
+        return board;
+    }
+
+    public Player getPlayerRed() {
+        return playerRed;
+    }
+
+    public Player getPlayerBlue() {
+        return playerBlue;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
 }
 

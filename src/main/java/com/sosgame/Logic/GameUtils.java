@@ -1,84 +1,99 @@
 package com.sosgame.Logic;
 
-public class GameUtils {
-    public Game game;
-    // Start a new game with given parameters
-    public void startNewGame(int boardSize, String gameMode, String player1Type, String player2Type) {
-        GameBoard gameBoard = new GameBoard(boardSize); // Create new game board
-        Player playerRed = new Player("Red",player1Type);
-        Player playerBlue = new Player("Blue",player2Type);
-        playerBlue.isTurn = true;//Blue starts first
+import javafx.application.Platform;
 
-        // Initialize the appropriate game mode
-        if (gameMode.equals("Simple")) {
-            game = new SimpleGame(gameBoard, playerRed, playerBlue);
-        } else if (gameMode.equals("General")) {
-            game = new GeneralGame(gameBoard, playerRed, playerBlue);
+public class GameUtils {
+
+    private GameBoard gameBoard;
+    private Game game; // The current game instance (Simple or General)
+    private String gameMode;
+
+    // Start a new game with given parameters
+    public void startNewGame(int boardSize, String gameMode, String playerRedType, String playerBlueType) {
+        // Create board
+        this.gameBoard = new GameBoard(boardSize);
+        this.gameMode = gameMode;
+
+        // Create correct game type (inject board + players)
+        if ("Simple".equalsIgnoreCase(gameMode)) {
+            game = new SimpleGame(gameBoard, makePlayer("Red",playerRedType), makePlayer("Blue",playerBlueType));
+        } else if ("General".equalsIgnoreCase(gameMode)) {
+            game = new GeneralGame(gameBoard, makePlayer("Red",playerRedType), makePlayer("Blue",playerBlueType));
         } else {
             throw new IllegalArgumentException("Invalid game mode: " + gameMode);
         }
 
+        game.initialize(); // Reset scores, turns, and winner flags
     }
 
-    // Copy the board state
-    void gameBoard(GameBoard gameBoard) {
-        this.gameBoard = new GameBoard(gameBoard);
-    }
-
-    // Make a move for the current player
+    // Handle player making a move
     public void makeMove(int row, int col) {
-        Player currentPlayer = PlayerRed.isTurn() ? PlayerRed : PlayerBlue; // Get current player
-        gameBoard.placeLetter(row, col, currentPlayer.getSelectedLetter(), currentPlayer.getColor()); // Place letter
-        switchTurn(); // Switch turns after move
-    }
+        if (game == null || game.isGameOver()) return;
 
-    // Switch turns between players
-    void switchTurn() {
-        if (PlayerRed.isTurn()) {
-            PlayerRed.setTurn(false);
-            PlayerBlue.setTurn(true);
-        } else {
-            PlayerRed.setTurn(true);
-            PlayerBlue.setTurn(false);
+        Player currentPlayer = getCurrentPlayer();
+        char letter = currentPlayer.getSelectedLetter();
+
+        // Place letter on board
+        game.getBoard().placeLetter(row, col, letter, currentPlayer.getColor());
+
+        // Check if this move causes a win or score update
+        boolean finished = game.checkWin(currentPlayer);
+
+        // Only switch turns if the game continues
+        if (!finished && !game.isGameOver()) {
+            switchTurn();
         }
     }
 
-    // GETTERS
+    // Switch turns between players
+    private void switchTurn() {
+        Player red = game.getPlayerRed();
+        Player blue = game.getPlayerBlue();
+
+        if (red.isTurn()) {
+            red.setTurn(false);
+            blue.setTurn(true);
+        } else {
+            red.setTurn(true);
+            blue.setTurn(false);
+        }
+    }
+    //Make Players
+    private Player makePlayer(String color, String type) {
+        return new Player(color, type);
+    }
+    // --- Getters used by UI ---
+
     public GameBoard getGameBoard() {
         return gameBoard;
     }
+
     public Player getPlayerRed() {
-        return PlayerRed;
+        return game != null ? game.getPlayerRed() : null;
     }
+
     public Player getPlayerBlue() {
-        return  PlayerBlue;
+        return game != null ? game.getPlayerBlue() : null;
     }
+
+    public Player getCurrentPlayer() {
+        if (game == null) return null;
+        return game.getPlayerRed().isTurn() ? game.getPlayerRed() : game.getPlayerBlue();
+    }
+
     public String getGameMode() {
         return gameMode;
     }
 
-    // Check if the game is over based on players' winner status
-    public boolean isGameOver () {
-        if (PlayerRed.isTurn()) {
-            return PlayerRed.isWinner() || PlayerBlue.isWinner();
-        } else {
-            return PlayerBlue.isWinner() || PlayerRed.isWinner();
-        }
+    public boolean isGameOver() {
+        return game != null && game.isGameOver();
     }
 
-    // Return the winning player
     public Player getWinner() {
-        if (PlayerRed.isWinner()) {
-            return PlayerRed;
-        } else if (PlayerBlue.isWinner()) {
-            return PlayerBlue;
-        } else {
-            return null; // No winner yet
-        }
-    }
-
-    // Get the current player
-    public Player getCurrentPlayer() {
-        return PlayerRed.isTurn() ? PlayerRed : PlayerBlue;
+        if (game == null) return null;
+        if (game.getPlayerRed().isWinner()) return game.getPlayerRed();
+        if (game.getPlayerBlue().isWinner()) return game.getPlayerBlue();
+        return null;
     }
 }
+
