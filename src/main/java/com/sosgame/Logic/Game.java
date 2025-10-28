@@ -5,13 +5,14 @@ public abstract class Game {
     protected Player playerRed;
     protected Player playerBlue;
     protected String mode;
-    protected boolean gameOver = false;
+    protected boolean gameOver;
 
     public Game(GameBoard board, String mode, Player red, Player blue) {
         this.board = board;
         this.mode = mode;
         this.playerRed = red;
         this.playerBlue = blue;
+        this.gameOver = false;
     }
 
     public void initialize() {
@@ -20,90 +21,45 @@ public abstract class Game {
         playerRed.setWinner(false);
         playerBlue.setWinner(false);
         gameOver = false;
-        playerBlue.setTurn(true);
         playerRed.setTurn(false);
+        playerBlue.setTurn(true); // blue starts
     }
 
     public abstract void makeMove(int row, int col);
 
-    // Shared SOS detection
-    protected boolean checkSOS(int row, int col) {
+    // Shared SOS pattern check
+    protected boolean checkSOS(int r, int c) {
         char[][] grid = board.getletterBoard();
-        char placed = grid[row][col];
-        int[][] directions = {
-                {0, 1}, {1, 0}, {1, 1}, {1, -1}
-        };
-
-        if (placed == 'S') {
-            return checkSOSFromS(row, col, grid, directions);
-        } else if (placed == 'O') {
-            return checkSOSFromO(row, col, grid, directions);
+        char ch = grid[r][c];
+        int[][] dirs = {{1,0},{0,1},{1,1},{1,-1}};
+        if (ch == 'O') {
+            for (int[] d : dirs)
+                if (isSOS(grid, r - d[0], c - d[1], r, c, r + d[0], c + d[1])) return true;
+        } else if (ch == 'S') {
+            for (int[] d : dirs)
+                if (isSOS(grid, r, c, r + d[0], c + d[1], r + 2*d[0], c + 2*d[1])) return true;
+            for (int[] d : dirs)
+                if (isSOS(grid, r, c, r - d[0], c - d[1], r - 2*d[0], c - 2*d[1])) return true;
         }
         return false;
     }
 
-    private boolean checkSOSFromS(int row, int col, char[][] grid, int[][] directions) {
-        for (int[] dir : directions) {
-            int r1 = row + dir[0], c1 = col + dir[1];
-            int r2 = row + 2 * dir[0], c2 = col + 2 * dir[1];
-            if (isInBounds(r1, c1, grid) && isInBounds(r2, c2, grid)) {
-                if (grid[r1][c1] == 'O' && grid[r2][c2] == 'S') return true;
-            }
-            r1 = row - dir[0];
-            c1 = col - dir[1];
-            r2 = row - 2 * dir[0];
-            c2 = col - 2 * dir[1];
-            if (isInBounds(r1, c1, grid) && isInBounds(r2, c2, grid)) {
-                if (grid[r1][c1] == 'O' && grid[r2][c2] == 'S') return true;
-            }
-        }
-        return false;
+    private boolean isSOS(char[][] g, int r1,int c1,int r2,int c2,int r3,int c3) {
+        return in(g,r1,c1) && in(g,r2,c2) && in(g,r3,c3)
+                && g[r1][c1]=='S' && g[r2][c2]=='O' && g[r3][c3]=='S';
     }
-
-    private boolean checkSOSFromO(int row, int col, char[][] grid, int[][] directions) {
-        for (int[] dir : directions) {
-            int r1 = row - dir[0], c1 = col - dir[1];
-            int r2 = row + dir[0], c2 = col + dir[1];
-            if (isInBounds(r1, c1, grid) && isInBounds(r2, c2, grid)) {
-                if (grid[r1][c1] == 'S' && grid[r2][c2] == 'S') return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isInBounds(int row, int col, char[][] grid) {
-        return row >= 0 && row < grid.length && col >= 0 && col < grid[0].length;
-    }
-
-    // Utility methods
-    protected Player getCurrentPlayer() {
-        return playerRed.isTurn() ? playerRed : playerBlue;
+    private boolean in(char[][] g,int r,int c){
+        return r>=0 && c>=0 && r<g.length && c<g[0].length;
     }
 
     protected void switchTurn() {
-        if (playerRed.isTurn()) {
-            playerRed.setTurn(false);
-            playerBlue.setTurn(true);
-        } else {
-            playerRed.setTurn(true);
-            playerBlue.setTurn(false);
-        }
+        playerRed.setTurn(!playerRed.isTurn());
+        playerBlue.setTurn(!playerBlue.isTurn());
     }
 
     // Getters
-    public GameBoard getBoard() {
-        return board;
-    }
-
-    public Player getPlayerRed() {
-        return playerRed;
-    }
-
-    public Player getPlayerBlue() {
-        return playerBlue;
-    }
-
-    public boolean isGameOver() {
-        return gameOver;
-    }
+    public GameBoard getBoard(){return board;}
+    public Player getPlayerRed(){return playerRed;}
+    public Player getPlayerBlue(){return playerBlue;}
+    public boolean isGameOver(){return gameOver;}
 }

@@ -2,52 +2,51 @@ package com.sosgame.Logic;
 
 public class GameUtils {
 
-    private GameBoard gameBoard;
     private Game game;
-    private String gameMode;
+    private GameBoard board;
+    private String mode;
 
+    // Create a new game
     public void startNewGame(int boardSize, String gameMode, String playerRedType, String playerBlueType) {
-        this.gameBoard = new GameBoard(boardSize);
-        this.gameMode = gameMode;
+        this.board = new GameBoard(boardSize);
+        this.mode = gameMode;
 
         Player red = new Player("Red", playerRedType);
         Player blue = new Player("Blue", playerBlueType);
         blue.setTurn(true);
 
         if ("Simple".equalsIgnoreCase(gameMode)) {
-            game = new SimpleGame(gameBoard, red, blue);
-        } else if ("General".equalsIgnoreCase(gameMode)) {
-            game = new GeneralGame(gameBoard, red, blue);
+            game = new SimpleGame(board, red, blue);
         } else {
-            throw new IllegalArgumentException("Invalid game mode: " + gameMode);
+            game = new GeneralGame(board, red, blue);
         }
 
         game.initialize();
     }
 
-    // delegate move logic to the Game subclass
+    // Player move delegation
     public void makeMove(int row, int col) {
         if (game == null || game.isGameOver()) return;
         game.makeMove(row, col);
     }
 
-    // --- Getters used by UI ---
-    public GameBoard getGameBoard() { return gameBoard; }
+    //Accessors
+    public GameBoard getGameBoard() { return board; }
     public Player getPlayerRed() { return game != null ? game.getPlayerRed() : null; }
     public Player getPlayerBlue() { return game != null ? game.getPlayerBlue() : null; }
-
     public Player getCurrentPlayer() {
-        if (game == null) return null;
-        return game.getPlayerRed().isTurn() ? game.getPlayerRed() : game.getPlayerBlue();
+        return game != null && game.getPlayerRed().isTurn()
+                ? game.getPlayerRed() : game.getPlayerBlue();
     }
 
-    public String getGameMode() { return gameMode; }
     public boolean isGameOver() { return game != null && game.isGameOver(); }
-
-    public String getWinner() {
+    public Player getWinner() {
         if (game == null) return null;
-        if (game.getPlayerRed().isWinner()) return game.getPlayerRed().color;
-        if (game.getPlayerBlue().isWinner()) return game.getPlayerBlue().color;
+        if (game.getPlayerRed().isWinner()) return game.getPlayerRed();
+        if (game.getPlayerBlue().isWinner()) return game.getPlayerBlue();
         return null;
     }
+
+    public String getGameMode() { return mode; }
 }
+
