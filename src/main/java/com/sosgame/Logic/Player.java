@@ -38,7 +38,7 @@ public class Player {
     }
 
     // Increase score by 1
-    public void incrementScore() {
+    public void incrementScore(int add) {
         this.score++;
     }
 
