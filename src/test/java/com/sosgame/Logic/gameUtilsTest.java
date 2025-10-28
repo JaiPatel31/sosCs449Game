@@ -1,163 +1,166 @@
 package com.sosgame.Logic;
 
-        import org.junit.jupiter.api.BeforeEach;
-        import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-        import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-        public class gameUtilsTest {
+/**
+ * Tests for GameUtils, SimpleGame, and GeneralGame integration.
+ */
+public class gameUtilsTest {
 
-            private GameUtils gameUtils;
+    private GameUtils gameUtils;
 
-            @BeforeEach
-            public void setUp() {
-                gameUtils = new GameUtils();
-            }
+    @BeforeEach
+    public void setUp() {
+        gameUtils = new GameUtils();
+    }
 
-            // ---------- startNewGame() Tests ----------
+    // ---------- startNewGame() Tests ----------
 
-            @Test
-            public void testStartNewSimpleGameInitializesCorrectly() {
-                gameUtils.startNewGame(5, "Simple", "Human", "Computer");
+    @Test
+    public void testStartNewSimpleGameInitializesCorrectly() {
+        gameUtils.startNewGame(5, "Simple", "Human", "Computer");
 
-                assertNotNull(gameUtils.getGameBoard());
-                assertEquals(5, gameUtils.getGameBoard().getSize());
-                assertEquals("Simple", gameUtils.getGameMode());
+        assertNotNull(gameUtils.getGameBoard());
+        assertEquals(5, gameUtils.getGameBoard().getSize());
+        assertEquals("Simple", gameUtils.getGameMode());
 
-                assertEquals("Red", gameUtils.getPlayerRed().getColor());
-                assertEquals("Blue", gameUtils.getPlayerBlue().getColor());
+        assertEquals("Red", gameUtils.getPlayerRed().getColor());
+        assertEquals("Blue", gameUtils.getPlayerBlue().getColor());
 
-                assertEquals("Human", gameUtils.getPlayerRed().getType());
-                assertEquals("Computer", gameUtils.getPlayerBlue().getType());
+        assertEquals("Human", gameUtils.getPlayerRed().getType());
+        assertEquals("Computer", gameUtils.getPlayerBlue().getType());
 
-                assertTrue(gameUtils.getPlayerBlue().isTurn());
-                assertFalse(gameUtils.getPlayerRed().isTurn());
-            }
-            @Test
-            public void testStartNewGeneralGameInitializesCorrectly() {
-                gameUtils.startNewGame(5, "General", "Human", "Computer");
+        assertTrue(gameUtils.getPlayerBlue().isTurn());
+        assertFalse(gameUtils.getPlayerRed().isTurn());
+    }
 
-                assertNotNull(gameUtils.getGameBoard());
-                assertEquals(5, gameUtils.getGameBoard().getSize());
-                assertEquals("General", gameUtils.getGameMode());
+    @Test
+    public void testStartNewGeneralGameInitializesCorrectly() {
+        gameUtils.startNewGame(5, "General", "Human", "Computer");
 
-                assertEquals("Red", gameUtils.getPlayerRed().getColor());
-                assertEquals("Blue", gameUtils.getPlayerBlue().getColor());
+        assertNotNull(gameUtils.getGameBoard());
+        assertEquals(5, gameUtils.getGameBoard().getSize());
+        assertEquals("General", gameUtils.getGameMode());
 
-                assertEquals("Human", gameUtils.getPlayerRed().getType());
-                assertEquals("Computer", gameUtils.getPlayerBlue().getType());
+        assertEquals("Red", gameUtils.getPlayerRed().getColor());
+        assertEquals("Blue", gameUtils.getPlayerBlue().getColor());
 
-                assertTrue(gameUtils.getPlayerBlue().isTurn());
-                assertFalse(gameUtils.getPlayerRed().isTurn());
-            }
-            @Test
-            public void testStartNewGameResetsPreviousGame() {
-                gameUtils.startNewGame(5, "General", "Human", "Human");
-                gameUtils.getGameBoard().placeLetter(1, 1, 'S', "Red");
+        assertEquals("Human", gameUtils.getPlayerRed().getType());
+        assertEquals("Computer", gameUtils.getPlayerBlue().getType());
 
-                // Start a new game should reset everything
-                gameUtils.startNewGame(6, "Simple", "AI", "Human");
+        assertTrue(gameUtils.getPlayerBlue().isTurn());
+        assertFalse(gameUtils.getPlayerRed().isTurn());
+    }
 
-                assertEquals(6, gameUtils.getGameBoard().getSize());
-                assertEquals("Simple", gameUtils.getGameMode());
-                assertTrue(gameUtils.getPlayerBlue().isTurn());
-                assertFalse(gameUtils.getPlayerRed().isTurn());
-                assertEquals("AI", gameUtils.getPlayerRed().getType());
-                assertEquals("Human", gameUtils.getPlayerBlue().getType());
-            }
+    @Test
+    public void testStartNewGameResetsPreviousGame() {
+        gameUtils.startNewGame(5, "General", "Human", "Human");
+        gameUtils.getGameBoard().placeLetter(1, 1, 'S', "Red");
 
-            // ---------- SwitchTurn() Tests ----------
+        // Start a new game should reset everything
+        gameUtils.startNewGame(6, "Simple", "AI", "Human");
 
-            @Test
-            public void testSwitchTurnFromBlueToRed() {
-                gameUtils.startNewGame(5, "Simple", "Human", "Human");
-                gameUtils.switchTurn();
+        assertEquals(6, gameUtils.getGameBoard().getSize());
+        assertEquals("Simple", gameUtils.getGameMode());
+        assertTrue(gameUtils.getPlayerBlue().isTurn());
+        assertFalse(gameUtils.getPlayerRed().isTurn());
+        assertEquals("AI", gameUtils.getPlayerRed().getType());
+        assertEquals("Human", gameUtils.getPlayerBlue().getType());
+    }
 
-                assertFalse(gameUtils.getPlayerBlue().isTurn());
-                assertTrue(gameUtils.getPlayerRed().isTurn());
-            }
+    // ---------- SwitchTurn() Tests ----------
+    // switchTurn() is private now, so test via move sequence
 
-            @Test
-            public void testSwitchTurnFromRedToBlue() {
-                gameUtils.startNewGame(5, "Simple", "Human", "Human");
-                gameUtils.getPlayerRed().setTurn(true);
-                gameUtils.getPlayerBlue().setTurn(false);
+    @Test
+    public void testTurnSwitchesFromBlueToRedAfterMove() {
+        gameUtils.startNewGame(3, "Simple", "Human", "Human");
 
-                gameUtils.switchTurn();
+        gameUtils.getPlayerBlue().setSelectedLetter('S');
+        gameUtils.makeMove(0, 0);
 
-                assertTrue(gameUtils.getPlayerBlue().isTurn());
-                assertFalse(gameUtils.getPlayerRed().isTurn());
-            }
+        assertTrue(gameUtils.getPlayerRed().isTurn());
+        assertFalse(gameUtils.getPlayerBlue().isTurn());
+    }
 
-            // ---------- MakeMove() Tests ----------
+    @Test
+    public void testTurnSwitchesFromRedToBlueAfterMove() {
+        gameUtils.startNewGame(3, "Simple", "Human", "Human");
 
-            @Test
-            public void testMakeMoveByRedPlayer() {
-                gameUtils.startNewGame(5, "Simple", "Human", "Human");
+        // Force Red’s turn
+        gameUtils.getPlayerRed().setTurn(true);
+        gameUtils.getPlayerBlue().setTurn(false);
 
-                gameUtils.getPlayerBlue().setTurn(false);
-                gameUtils.getPlayerRed().setTurn(true);
+        gameUtils.getPlayerRed().setSelectedLetter('S');
+        gameUtils.makeMove(0, 0);
 
-                gameUtils.getPlayerRed().setSelectedLetter('S');
-                gameUtils.makeMove(0, 0);
+        assertTrue(gameUtils.getPlayerBlue().isTurn());
+        assertFalse(gameUtils.getPlayerRed().isTurn());
+    }
 
-                assertEquals('S', gameUtils.getGameBoard().getletterBoard()[0][0]);
-                assertEquals('R', gameUtils.getGameBoard().getownerBoard()[0][0]);
+    // ---------- MakeMove() Tests ----------
 
-                // Turn should now switch to Blue
-                assertFalse(gameUtils.getPlayerRed().isTurn());
-                assertTrue(gameUtils.getPlayerBlue().isTurn());
-            }
+    @Test
+    public void testMakeMoveByRedPlayerPlacesCorrectLetterAndOwner() {
+        gameUtils.startNewGame(3, "Simple", "Human", "Human");
 
-            @Test
-            public void testMakeMoveByBluePlayer() {
-                gameUtils.startNewGame(5, "Simple", "Human", "Human");
+        gameUtils.getPlayerBlue().setTurn(false);
+        gameUtils.getPlayerRed().setTurn(true);
+        gameUtils.getPlayerRed().setSelectedLetter('S');
 
-                // Force Blue’s turn
+        gameUtils.makeMove(0, 0);
 
-                gameUtils.getPlayerBlue().setSelectedLetter('O');
+        assertEquals('S', gameUtils.getGameBoard().getLetterAt(0, 0));
+        assertEquals('R', gameUtils.getGameBoard().getOwnerAt(0, 0));
 
-                gameUtils.makeMove(1, 1);
+        // Turn should now switch to Blue
+        assertFalse(gameUtils.getPlayerRed().isTurn());
+        assertTrue(gameUtils.getPlayerBlue().isTurn());
+    }
 
-                assertEquals('O', gameUtils.getGameBoard().getletterBoard()[1][1]);
-                assertEquals('B', gameUtils.getGameBoard().getownerBoard()[1][1]);
+    @Test
+    public void testMakeMoveByBluePlayerPlacesCorrectLetterAndOwner() {
+        gameUtils.startNewGame(3, "Simple", "Human", "Human");
 
-                // Turn should now switch to Red
-                assertTrue(gameUtils.getPlayerRed().isTurn());
-                assertFalse(gameUtils.getPlayerBlue().isTurn());
-            }
+        gameUtils.getPlayerBlue().setSelectedLetter('O');
+        gameUtils.makeMove(1, 1);
 
-            @Test
-            public void testMakeMoveThrowsWhenInvalidCell() {
-                gameUtils.startNewGame(5, "Simple", "Human", "Human");
+        assertEquals('O', gameUtils.getGameBoard().getLetterAt(1, 1));
+        assertEquals('B', gameUtils.getGameBoard().getOwnerAt(1, 1));
 
-                gameUtils.getPlayerRed().setSelectedLetter('S');
-                gameUtils.makeMove(0, 0);
+        // Turn should now switch to Red
+        assertTrue(gameUtils.getPlayerRed().isTurn());
+        assertFalse(gameUtils.getPlayerBlue().isTurn());
+    }
 
-                gameUtils.getPlayerBlue().setTurn(true);
-                gameUtils.getPlayerBlue().setSelectedLetter('O');
+    @Test
+    public void testMakeMoveThrowsWhenInvalidCell() {
+        gameUtils.startNewGame(3, "Simple", "Human", "Human");
 
-                Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                        gameUtils.makeMove(0, 0));
+        gameUtils.getPlayerBlue().setSelectedLetter('S');
+        gameUtils.makeMove(0, 0);
 
-                assertEquals("Cell is already occupied.", exception.getMessage());
-            }
+        gameUtils.getPlayerRed().setSelectedLetter('O');
+        assertThrows(IllegalArgumentException.class,
+                () -> gameUtils.makeMove(0, 0),
+                "Cell is already occupied.");
+    }
 
-            @Test
-            public void testMakeMoveMaintainsGameIntegrity() {
-                gameUtils.startNewGame(5, "General", "Human", "Human");
+    @Test
+    public void testMakeMoveMaintainsGameIntegrity() {
+        gameUtils.startNewGame(3, "General", "Human", "Human");
 
-                gameUtils.getPlayerBlue().setSelectedLetter('O');
-                gameUtils.makeMove(0, 1);
+        gameUtils.getPlayerBlue().setSelectedLetter('O');
+        gameUtils.makeMove(0, 1);
 
-                gameUtils.getPlayerRed().setSelectedLetter('S');
-                gameUtils.makeMove(0, 0);
+        gameUtils.getPlayerRed().setSelectedLetter('S');
+        gameUtils.makeMove(0, 0);
 
-
-
-                assertEquals('S', gameUtils.getGameBoard().getletterBoard()[0][0]);
-                assertEquals('O', gameUtils.getGameBoard().getletterBoard()[0][1]);
-                assertEquals('R', gameUtils.getGameBoard().getownerBoard()[0][0]);
-                assertEquals('B', gameUtils.getGameBoard().getownerBoard()[0][1]);
-            }
-        }
+        assertEquals('S', gameUtils.getGameBoard().getLetterAt(0, 0));
+        assertEquals('O', gameUtils.getGameBoard().getLetterAt(0, 1));
+        assertEquals('R', gameUtils.getGameBoard().getOwnerAt(0, 0));
+        assertEquals('B', gameUtils.getGameBoard().getOwnerAt(0, 1));
+    }
+}

@@ -7,7 +7,11 @@ public class SimpleGame extends Game {
 
     @Override
     public void makeMove(int r, int c) {
-        if (gameOver || !board.isCellEmpty(r, c)) return;
+        if (!board.isCellEmpty(r, c)){
+            throw new IllegalArgumentException("Cell is occupied.");
+        }else if (gameOver) {
+            throw new IllegalStateException("Game is already over.");
+        }
 
         Player current = playerBlue.isTurn() ? playerBlue : playerRed;
         char letter = current.getSelectedLetter();

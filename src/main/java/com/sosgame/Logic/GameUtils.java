@@ -1,5 +1,7 @@
 package com.sosgame.Logic;
 
+import java.util.List;
+
 public class GameUtils {
 
     private Game game;
@@ -48,5 +50,10 @@ public class GameUtils {
     }
 
     public String getGameMode() { return mode; }
+
+    public List<Game.SOSLine> getCompletedSOSLines() {
+        return game.getCompletedSOSLines(); // assumes currentGame = Game instance
+    }
+
 }
 
