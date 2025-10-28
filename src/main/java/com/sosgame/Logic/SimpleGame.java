@@ -7,8 +7,15 @@ public class SimpleGame extends Game {
     }
 
     protected boolean checkWin(Player currentPlayer) {
-        // Simple game win logic to be implemented
-        return false;
+        if (this.checkWin(currentPlayer)) {
+            currentPlayer.setWinner(true);
+            this.gameOver = true;
+            return true;
+        } else {
+            return false;
+        }
     }
+
+
 }
 

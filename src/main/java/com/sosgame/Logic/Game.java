@@ -58,32 +58,40 @@ public abstract class Game {
         };
 
         if (placed == 'S') {
-            // Check both directions for S-O-S
-            for (int[] dir : directions) {
-                int r1 = row + dir[0], c1 = col + dir[1];
-                int r2 = row + 2 * dir[0], c2 = col + 2 * dir[1];
-                if (isInBounds(r1, c1, grid) && isInBounds(r2, c2, grid)) {
-                    if (grid[r1][c1] == 'O' && grid[r2][c2] == 'S') {
-                        return true;
-                    }
-                }
-                r1 = row - dir[0]; c1 = col - dir[1];
-                r2 = row - 2 * dir[0]; c2 = col - 2 * dir[1];
-                if (isInBounds(r1, c1, grid) && isInBounds(r2, c2, grid)) {
-                    if (grid[r1][c1] == 'O' && grid[r2][c2] == 'S') {
-                        return true;
-                    }
+            return checkSOSFromS(row, col, grid, directions);
+        } else if (placed == 'O') {
+            return checkSOSFromO(row, col, grid, directions);
+        }
+        return false;
+    }
+
+    private boolean checkSOSFromS(int row, int col, char[][] grid, int[][] directions) {
+        for (int[] dir : directions) {
+            int r1 = row + dir[0], c1 = col + dir[1];
+            int r2 = row + 2 * dir[0], c2 = col + 2 * dir[1];
+            if (isInBounds(r1, c1, grid) && isInBounds(r2, c2, grid)) {
+                if (grid[r1][c1] == 'O' && grid[r2][c2] == 'S') {
+                    return true;
                 }
             }
-        } else if (placed == 'O') {
-            // Check one direction each way for S-O-S
-            for (int[] dir : directions) {
-                int r1 = row - dir[0], c1 = col - dir[1];
-                int r2 = row + dir[0], c2 = col + dir[1];
-                if (isInBounds(r1, c1, grid) && isInBounds(r2, c2, grid)) {
-                    if (grid[r1][c1] == 'S' && grid[r2][c2] == 'S') {
-                        return true;
-                    }
+            r1 = row - dir[0]; c1 = col - dir[1];
+            r2 = row - 2 * dir[0]; c2 = col - 2 * dir[1];
+            if (isInBounds(r1, c1, grid) && isInBounds(r2, c2, grid)) {
+                if (grid[r1][c1] == 'O' && grid[r2][c2] == 'S') {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean checkSOSFromO(int row, int col, char[][] grid, int[][] directions) {
+        for (int[] dir : directions) {
+            int r1 = row - dir[0], c1 = col - dir[1];
+            int r2 = row + dir[0], c2 = col + dir[1];
+            if (isInBounds(r1, c1, grid) && isInBounds(r2, c2, grid)) {
+                if (grid[r1][c1] == 'S' && grid[r2][c2] == 'S') {
+                    return true;
                 }
             }
         }
