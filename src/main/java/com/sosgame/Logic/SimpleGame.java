@@ -7,9 +7,9 @@ public class SimpleGame extends Game {
 
     @Override
     public void makeMove(int r, int c) {
-        if (!board.isCellEmpty(r, c)){
+        if (!board.isCellEmpty(r, c)) {
             throw new IllegalArgumentException("Cell is occupied.");
-        }else if (gameOver) {
+        } else if (gameOver) {
             throw new IllegalStateException("Game is already over.");
         }
 
@@ -20,6 +20,8 @@ public class SimpleGame extends Game {
 
         if (checkSOS(r, c)) {
             current.setWinner(true);
+            gameOver = true;
+        } else if (board.isBoardFull()) {
             gameOver = true;
         } else {
             switchTurn();
