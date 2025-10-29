@@ -71,5 +71,38 @@ public class SimpleGameTest {
         assertTrue(blue.isWinner());
         assertTrue(game.isGameOver());
     }
+
+    @Test
+    void testGameEndsInTieNoSOSFormed() {
+        // Fill the board with moves that do NOT form SOS
+        // Row 0
+        blue.setSelectedLetter('S');
+        game.makeMove(0, 0);
+        red.setSelectedLetter('O');
+        game.makeMove(0, 1);
+        blue.setSelectedLetter('O');
+        game.makeMove(0, 2);
+
+        // Row 1
+        red.setSelectedLetter('O');
+        game.makeMove(1, 0);
+        blue.setSelectedLetter('S');
+        game.makeMove(1, 1);
+        red.setSelectedLetter('O');
+        game.makeMove(1, 2);
+
+        // Row 2
+        blue.setSelectedLetter('O');
+        game.makeMove(2, 0);
+        red.setSelectedLetter('S');
+        game.makeMove(2, 1);
+        blue.setSelectedLetter('O');
+        game.makeMove(2, 2);
+
+        // Assertions
+        assertTrue(game.isGameOver(), "Game should end when the board is full");
+        assertFalse(blue.isWinner(), "No player should be declared the winner");
+        assertFalse(red.isWinner(), "No player should be declared the winner");
+    }
 }
 
