@@ -4,17 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Game {
+    // The game board shared by subclasses
     protected GameBoard board;
+    // Two players in the game
     protected Player playerRed;
     protected Player playerBlue;
+    // Game mode string (e.g. "Simple" or "General")
     protected String mode;
+    // Whether the game is finished
     protected boolean gameOver;
+    // Track the SOS lines formed during play for UI highlighting
     protected List<SOSLine> completedSOSLines = new ArrayList<>();
-    //Track the SOS lines formed during the game for UI
     public static class SOSLine {
         public final int startRow, startCol, endRow, endCol;
         public final String color;
 
+        // Simple container for an SOS line's endpoints and the player's color
         public SOSLine(int sr, int sc, int er, int ec, String color) {
             this.startRow = sr;
             this.startCol = sc;
@@ -24,14 +29,17 @@ public abstract class Game {
         }
     }
 
+    // Return the recorded SOS lines
     public List<SOSLine> getCompletedSOSLines() {
         return completedSOSLines;
     }
 
-    public void resetSOSLines() {
+    // Clear recorded SOS lines (used internally when starting a new game)
+        public void resetSOSLines() {
         completedSOSLines.clear();
     }
 
+    // Construct a game with a board, mode, and two players
     public Game(GameBoard board, String mode, Player red, Player blue) {
         this.board = board;
         this.mode = mode;
@@ -40,23 +48,29 @@ public abstract class Game {
         this.gameOver = false;
     }
 
+    // Initialize or reset runtime state before starting a game
     public void initialize() {
         playerRed.resetScore();
         playerBlue.resetScore();
         playerRed.setWinner(false);
         playerBlue.setWinner(false);
         gameOver = false;
+        // Clear any recorded SOS lines when starting/resetting a game
+        resetSOSLines();
         playerRed.setTurn(false);
         playerBlue.setTurn(true); // blue starts
     }
 
+    // Subclasses implement how a move is applied (Simple vs General rules)
     public abstract void makeMove(int row, int col);
 
-    // Shared SOS pattern check
+    // Shared SOS pattern check invoked after placing a letter at (r,c)
     protected boolean checkSOS(int r, int c) {
         char[][] grid = board.getletterBoard();
         char ch = grid[r][c];
+        // Directions to check: down, right, diag down-right, diag down-left
         int[][] dirs = {{1,0},{0,1},{1,1},{1,-1}};
+        // Determine which player made the move (the one whose turn it is)
         Player currentPlayer = playerBlue.isTurn() ? playerBlue : playerRed;
 
         if (ch == 'O') {
@@ -67,9 +81,11 @@ public abstract class Game {
         return false;
     }
 
+    // Check for SOS patterns where the placed letter is 'O' (O must be center)
     private boolean checkSOSWithO(char[][] grid, int r, int c, int[][] dirs, Player currentPlayer) {
         boolean found = false;
         for (int[] d : dirs) {
+            // For each direction, check one cell before and one after
             if (isSOS(grid, r - d[0], c - d[1], r, c, r + d[0], c + d[1])) {
                 completedSOSLines.add(
                         new SOSLine(r - d[0], c - d[1], r + d[0], c + d[1], currentPlayer.getColor())
@@ -80,6 +96,7 @@ public abstract class Game {
         return found;
     }
 
+    // Check for SOS patterns where the placed letter is 'S' (S can be start or end)
     private boolean checkSOSWithS(char[][] grid, int r, int c, int[][] dirs, Player currentPlayer) {
         boolean found = false;
 
@@ -106,14 +123,17 @@ public abstract class Game {
         return found;
     }
 
+    // Helper to verify three cells form 'S','O','S'
     private boolean isSOS(char[][] g, int r1,int c1,int r2,int c2,int r3,int c3) {
         return in(g,r1,c1) && in(g,r2,c2) && in(g,r3,c3)
                 && g[r1][c1]=='S' && g[r2][c2]=='O' && g[r3][c3]=='S';
     }
+    // Check bounds for a given cell
     private boolean in(char[][] g,int r,int c){
         return r>=0 && c>=0 && r<g.length && c<g[0].length;
     }
 
+    // Toggle turns between players
     protected void switchTurn() {
         playerRed.setTurn(!playerRed.isTurn());
         playerBlue.setTurn(!playerBlue.isTurn());
