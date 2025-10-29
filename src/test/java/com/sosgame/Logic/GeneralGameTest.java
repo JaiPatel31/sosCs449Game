@@ -54,12 +54,6 @@ public class GeneralGameTest {
 
     @Test
     void testMultipleSOSAddsMultiplePoints() {
-        // Arrange
-        GameBoard board = new GameBoard(3);
-        Player red  = new Player("Red", "Human");
-        Player blue = new Player("Blue", "Human");
-        GeneralGame game = new GeneralGame(board, red, blue);
-        game.initialize(); // Blue starts
 
         // Prepare S's around the center (1,1)
         board.placeLetter(0, 1, 'S', "Blue"); // above
@@ -127,4 +121,34 @@ public class GeneralGameTest {
         assertTrue(blue.isWinner(), "Blue should be the winner (higher score)");
     }
 
+    @Test
+    void testGameEndsInDrawWhenScoresEqual() {
+        // Arrange
+        GameBoard board = new GameBoard(3);
+        Player red = new Player("Red", "Human");
+        Player blue = new Player("Blue", "Human");
+        GeneralGame game = new GeneralGame(board, red, blue);
+        game.initialize();
+
+        // Both players have equal scores
+        red.incrementScore();
+        blue.incrementScore();
+
+        // Fill all but one cell (leave bottom-right empty)
+        for (int r = 0; r < board.getSize(); r++) {
+            for (int c = 0; c < board.getSize(); c++) {
+                if (r == 2 && c == 2) continue;
+                board.placeLetter(r, c, 'S', "Red");
+            }
+        }
+
+        // Act: last move fills the board
+        blue.setSelectedLetter('O');
+        game.makeMove(2, 2);
+
+        // Assert
+        assertTrue(game.isGameOver(), "Game should end when board is full");
+        assertFalse(red.isWinner(), "No player should be declared the winner (draw)");
+        assertFalse(blue.isWinner(), "No player should be declared the winner (draw)");
+    }
 }
