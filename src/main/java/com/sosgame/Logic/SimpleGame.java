@@ -24,6 +24,10 @@ public class SimpleGame extends Game {
         // Place the letter on the board
         board.placeLetter(r, c, letter, current.getColor());
 
+        checkWin(current,r,c);
+    }
+
+    private void checkWin(Player current, int r, int c) {
         // If this move formed SOS, current player wins immediately
         if (checkSOS(r, c)) {
             current.setWinner(true);
