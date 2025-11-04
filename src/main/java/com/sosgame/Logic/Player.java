@@ -28,7 +28,10 @@ public class Player {
         this.isTurn = player.isTurn;
         this.isWinner = player.isWinner;
     }
-
+    //Reset Player Score
+    public void resetScore() {
+        this.score = 0;
+    }
     // Get the player's score
     public int getScore() {
         return score;

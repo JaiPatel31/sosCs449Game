@@ -2,83 +2,150 @@ package com.sosgame.UI;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeLineCap;
+import com.sosgame.Logic.GameUtils;
+import com.sosgame.Logic.Player;
 import com.sosgame.Logic.Game;
 
-public class GameBoardUI {
-    private Label TurnLabel; // Displays whose turn it is
-    private Game game; // Game logic controller
+import java.util.List;
 
-    // Creates and returns the game board UI
-    public VBox createGameBoard(int size, Game gameController){
-        game = gameController;
-        VBox boardBox = new VBox(); // Main container for the board
+// UI component that renders the game board and SOS lines
+public class GameBoardUI {
+    // Label showing current turn or result
+    private Label turnLabel;
+    // Controller for game logic
+    private GameUtils gameUtils;
+    // Grid of buttons representing board cells
+    private GridPane boardGrid;
+    // Transparent overlay pane for drawing SOS lines
+    private Pane lineLayer; //transparent overlay for drawing lines
+
+    // Create the visual board of given size and bind to controller
+    public VBox createGameBoard(int size, GameUtils gameController) {
+        this.gameUtils = gameController;
+
+        VBox boardBox = new VBox(10);
         boardBox.setAlignment(Pos.CENTER);
 
-        // Making the board itself
-        GridPane gameBoard = new GridPane(); // Grid for board cells
-        gameBoard.setPadding(new Insets(10));
-        gameBoard.setHgap(5);
-        gameBoard.setVgap(5);
-        gameBoard.setAlignment(Pos.CENTER);
+        boardGrid = new GridPane();
+        boardGrid.setPadding(new Insets(10));
+        boardGrid.setHgap(5);
+        boardGrid.setVgap(5);
+        boardGrid.setAlignment(Pos.CENTER);
 
-        // Add buttons for each cell
-        for(int i = 0; i < size; i++){
-            for(int j = 0; j < size; j++){
-                Button cell = new Button(); // Cell button
-                cell.setPrefSize(50, 50); // Set cell size
-                cell.setStyle("-fx-background-color: white; -fx-border-color: black;"); // Cell style
-
-                cell.setUserData(new int[]{i,j}); // Store cell position
-
-                cell.setOnAction(e -> handleCellClick(cell)); // Handle cell click
-                gameBoard.add(cell, i, j); // Add cell to grid
+        //Create grid buttons
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                Button cell = new Button();
+                cell.setPrefSize(50, 50);
+                cell.setStyle("-fx-background-color: white; -fx-border-color: black;");
+                cell.setUserData(new int[]{i, j});
+                // Click handler for a cell
+                // Use the event parameter (consume it) to avoid 'unused parameter' warnings
+                cell.setOnAction(e -> { e.consume(); handleCellClick(cell); });
+                boardGrid.add(cell, j, i);
             }
         }
 
-        // Turn Label
-        TurnLabel = new Label("Turn: Blue Player"); // Shows current turn
-        boardBox.getChildren().addAll(gameBoard, TurnLabel); // Add board and label to container
+        //Transparent Pane for SOS lines
+        lineLayer = new Pane();
+        lineLayer.setPickOnBounds(false);
+
+        // Stack the grid and line layer
+        StackPane stack = new StackPane(boardGrid, lineLayer);
+
+        turnLabel = new Label("Turn: Blue Player");
+        boardBox.getChildren().addAll(stack, turnLabel);
+
         return boardBox;
     }
 
-    // Handles a cell click event
-    void handleCellClick(Button cell) {
-        try {
-            // Do nothing if the game is over
-            if (game.isGameOver()) return;
+    // Handle a cell being clicked by delegating to the game controller
+    private void handleCellClick(Button cell) {
+        if (gameUtils.isGameOver()) return;
 
-            // Get the cell position from user data
-            int[] pos = (int[]) cell.getUserData();
+        int[] pos = (int[]) cell.getUserData();
+        gameUtils.makeMove(pos[0], pos[1]);
 
-            // Get the letter selected by the current player
-            char letterPlayed = game.getCurrentPlayer().getSelectedLetter();
-            // Make the move in the game logic
-            game.makeMove(pos[0], pos[1]);
+        refreshBoard();
+        refreshTurnLabel();
+    }
 
-            // Set the button text to the letter played and update its style
-            cell.setText(Character.toString(letterPlayed));
-            cell.setStyle("-fx-background-color: " + (game.getCurrentPlayer().getColor().equals("Red") ?  "lightblue": "lightcoral") + "; -fx-border-color: black;");
-
-            // Update the turn label based on game state
-            if (game.isGameOver()) {
-                TurnLabel.setText("Game Over! Winner: " + game.getWinner());
-            } else {
-                TurnLabel.setText("Turn: " + (game.getCurrentPlayer().getColor().equals("Red") ? "Red" : "Blue") + " Player");
+    // Update buttons to reflect board state
+    private void refreshBoard() {
+        for (Node node : boardGrid.getChildren()) {
+            if (node instanceof Button cell) {
+                int[] pos = (int[]) cell.getUserData();
+                char letter = gameUtils.getGameBoard().getLetterAt(pos[0], pos[1]);
+                char owner = gameUtils.getGameBoard().getOwnerAt(pos[0], pos[1]);
+                cell.setText(letter == '\0' ? "" : String.valueOf(letter));
+                cell.setStyle("-fx-background-color: " +
+                        (owner == 'R' ? "lightcoral"
+                                : owner == 'B' ? "lightblue"
+                                : "white") +
+                        "; -fx-border-color: black;");
             }
+        }
 
-        } catch (Exception ex) {
-            // Show an error alert if the move is invalid
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Invalid Move");
-            alert.setHeaderText("Cannot make this move");
-            alert.setContentText(ex.getMessage());
-            alert.showAndWait();
+        drawSOSLines(); //draw connecting lines
+    }
+
+    // Update the turn label or show the winner/draw
+    private void refreshTurnLabel() {
+        if (gameUtils.isGameOver()) {
+            Player w = gameUtils.getWinner();
+            turnLabel.setText(w != null
+                    ? w.getColor() + " Player Wins!"
+                    : "Draw!");
+        } else {
+            turnLabel.setText("Turn: " + gameUtils.getCurrentPlayer().getColor());
         }
     }
 
+    // Draw lines connecting SOS endpoints on the overlay
+    private void drawSOSLines() {
+        lineLayer.getChildren().clear();
+
+        List<Game.SOSLine> sosLines = gameUtils.getCompletedSOSLines();
+        if (sosLines == null) return;
+
+        for (Game.SOSLine line : sosLines) {
+            Node startNode = getCell(line.startRow, line.startCol);
+            Node endNode = getCell(line.endRow, line.endCol);
+            if (startNode == null || endNode == null) continue;
+
+            // Compute center points of the two cells
+            double startX = startNode.getLayoutX() + startNode.getBoundsInParent().getWidth() / 2;
+            double startY = startNode.getLayoutY() + startNode.getBoundsInParent().getHeight() / 2;
+            double endX = endNode.getLayoutX() + endNode.getBoundsInParent().getWidth() / 2;
+            double endY = endNode.getLayoutY() + endNode.getBoundsInParent().getHeight() / 2;
+
+            Color color = line.color.equalsIgnoreCase("Red") ? Color.RED : Color.BLUE;
+
+            Line sosLine = new Line(startX, startY, endX, endY);
+            sosLine.setStroke(color);
+            sosLine.setStrokeWidth(4);
+            sosLine.setStrokeLineCap(StrokeLineCap.ROUND);
+
+            lineLayer.getChildren().add(sosLine);
+        }
+    }
+
+    // Find the node (button) at given row/column in the grid
+    private Node getCell(int row, int col) {
+        for (Node node : boardGrid.getChildren()) {
+            Integer r = GridPane.getRowIndex(node);
+            Integer c = GridPane.getColumnIndex(node);
+            if (r != null && c != null && r == row && c == col) {
+                return node;
+            }
+        }
+        return null;
+    }
 }

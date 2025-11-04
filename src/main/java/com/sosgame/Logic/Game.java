@@ -1,81 +1,147 @@
 package com.sosgame.Logic;
 
-public class Game {
-    private GameBoard gameBoard; // The game board instance
-    private Player PlayerRed;    // Red player
-    private Player PlayerBlue;   // Blue player
-    private String gameMode;     // "Simple" or "General" game mode
+import java.util.ArrayList;
+import java.util.List;
 
-    // Start a new game with given parameters
-    public void startNewGame(int boardSize, String gameMode, String player1Type, String player2Type) {
-        this.gameBoard = new GameBoard(boardSize); // Create new board
-        this.gameMode = gameMode;                  // Set game mode
-        this.PlayerRed = new Player("Red", player1Type);   // Create Red player
-        this.PlayerBlue = new Player("Blue", player2Type); // Create Blue player
-        this.PlayerBlue.setTurn(true);//Blue starts first
-        this.PlayerRed.setTurn(false);
+public abstract class Game {
+    // The game board shared by subclasses
+    protected GameBoard board;
+    // Two players in the game
+    protected Player playerRed;
+    protected Player playerBlue;
+    // Game mode string (e.g. "Simple" or "General")
+    protected String mode;
+    // Whether the game is finished
+    protected boolean gameOver;
+    // Track the SOS lines formed during play for UI highlighting
+    protected List<SOSLine> completedSOSLines = new ArrayList<>();
+    public static class SOSLine {
+        public final int startRow, startCol, endRow, endCol;
+        public final String color;
 
-    }
-
-    // Copy the board state
-    void gameBoard(GameBoard gameBoard) {
-        this.gameBoard = new GameBoard(gameBoard);
-    }
-
-    // Make a move for the current player
-    public void makeMove(int row, int col) {
-        Player currentPlayer = PlayerRed.isTurn() ? PlayerRed : PlayerBlue; // Get current player
-        gameBoard.placeLetter(row, col, currentPlayer.getSelectedLetter(), currentPlayer.getColor()); // Place letter
-        switchTurn(); // Switch turns after move
-    }
-
-    // Switch turns between players
-    void switchTurn() {
-        if (PlayerRed.isTurn()) {
-            PlayerRed.setTurn(false);
-            PlayerBlue.setTurn(true);
-        } else {
-            PlayerRed.setTurn(true);
-            PlayerBlue.setTurn(false);
+        // Simple container for an SOS line's endpoints and the player's color
+        public SOSLine(int sr, int sc, int er, int ec, String color) {
+            this.startRow = sr;
+            this.startCol = sc;
+            this.endRow = er;
+            this.endCol = ec;
+            this.color = color;
         }
     }
 
-    // GETTERS
-    public GameBoard getGameBoard() {
-        return gameBoard;
-    }
-    public Player getPlayerRed() {
-        return PlayerRed;
-    }
-    public Player getPlayerBlue() {
-        return  PlayerBlue;
-    }
-    public String getGameMode() {
-        return gameMode;
+    // Return the recorded SOS lines
+    public List<SOSLine> getCompletedSOSLines() {
+        return completedSOSLines;
     }
 
-    // Check if the game is over based on players' winner status
-    public boolean isGameOver () {
-        if (PlayerRed.isTurn()) {
-            return PlayerRed.isWinner() || PlayerBlue.isWinner();
-        } else {
-            return PlayerBlue.isWinner() || PlayerRed.isWinner();
+    // Clear recorded SOS lines (used internally when starting a new game)
+        public void resetSOSLines() {
+        completedSOSLines.clear();
+    }
+
+    // Construct a game with a board, mode, and two players
+    public Game(GameBoard board, String mode, Player red, Player blue) {
+        this.board = board;
+        this.mode = mode;
+        this.playerRed = red;
+        this.playerBlue = blue;
+        this.gameOver = false;
+    }
+
+    // Initialize or reset runtime state before starting a game
+    public void initialize() {
+        playerRed.resetScore();
+        playerBlue.resetScore();
+        playerRed.setWinner(false);
+        playerBlue.setWinner(false);
+        gameOver = false;
+        // Clear any recorded SOS lines when starting/resetting a game
+        resetSOSLines();
+        playerRed.setTurn(false);
+        playerBlue.setTurn(true); // blue starts
+    }
+
+    // Subclasses implement how a move is applied (Simple vs General rules)
+    public abstract void makeMove(int row, int col);
+
+    // Shared SOS pattern check invoked after placing a letter at (r,c)
+    protected boolean checkSOS(int r, int c) {
+        char[][] grid = board.getletterBoard();
+        char ch = grid[r][c];
+        // Directions to check: down, right, diag down-right, diag down-left
+        int[][] dirs = {{1,0},{0,1},{1,1},{1,-1}};
+        // Determine which player made the move (the one whose turn it is)
+        Player currentPlayer = playerBlue.isTurn() ? playerBlue : playerRed;
+
+        if (ch == 'O') {
+            return checkSOSWithO(grid, r, c, dirs, currentPlayer);
+        } else if (ch == 'S') {
+            return checkSOSWithS(grid, r, c, dirs, currentPlayer);
         }
+        return false;
     }
 
-    // Return the winning player
-    public Player getWinner() {
-        if (PlayerRed.isWinner()) {
-            return PlayerRed;
-        } else if (PlayerBlue.isWinner()) {
-            return PlayerBlue;
-        } else {
-            return null; // No winner yet
+    // Check for SOS patterns where the placed letter is 'O' (O must be center)
+    private boolean checkSOSWithO(char[][] grid, int r, int c, int[][] dirs, Player currentPlayer) {
+        boolean found = false;
+        for (int[] d : dirs) {
+            // For each direction, check one cell before and one after
+            if (isSOS(grid, r - d[0], c - d[1], r, c, r + d[0], c + d[1])) {
+                completedSOSLines.add(
+                        new SOSLine(r - d[0], c - d[1], r + d[0], c + d[1], currentPlayer.getColor())
+                );
+                found = true;
+            }
         }
+        return found;
     }
 
-    // Get the current player
-    public Player getCurrentPlayer() {
-        return PlayerRed.isTurn() ? PlayerRed : PlayerBlue;
+    // Check for SOS patterns where the placed letter is 'S' (S can be start or end)
+    private boolean checkSOSWithS(char[][] grid, int r, int c, int[][] dirs, Player currentPlayer) {
+        boolean found = false;
+
+        for (int[] d : dirs) {
+            int dr = d[0], dc = d[1];
+
+            // Case 1: S at start -> (S at r,c) (O at r+dr,c+dc) (S at r+2dr,c+2dc)
+            if (isSOS(grid, r, c, r + dr, c + dc, r + 2 * dr, c + 2 * dc)) {
+                completedSOSLines.add(
+                        new SOSLine(r, c, r + 2 * dr, c + 2 * dc, currentPlayer.getColor())
+                );
+                found = true;
+            }
+
+            // Case 2: S at end -> (S at r-2dr,c-2dc) (O at r-dr,c-dc) (S at r,c)
+            if (isSOS(grid, r - 2 * dr, c - 2 * dc, r - dr, c - dc, r, c)) {
+                completedSOSLines.add(
+                        new SOSLine(r - 2 * dr, c - 2 * dc, r, c, currentPlayer.getColor())
+                );
+                found = true;
+            }
+        }
+
+        return found;
     }
+
+    // Helper to verify three cells form 'S','O','S'
+    private boolean isSOS(char[][] g, int r1,int c1,int r2,int c2,int r3,int c3) {
+        return in(g,r1,c1) && in(g,r2,c2) && in(g,r3,c3)
+                && g[r1][c1]=='S' && g[r2][c2]=='O' && g[r3][c3]=='S';
+    }
+    // Check bounds for a given cell
+    private boolean in(char[][] g,int r,int c){
+        return r>=0 && c>=0 && r<g.length && c<g[0].length;
+    }
+
+    // Toggle turns between players
+    protected void switchTurn() {
+        playerRed.setTurn(!playerRed.isTurn());
+        playerBlue.setTurn(!playerBlue.isTurn());
+    }
+
+    // Getters
+    public GameBoard getBoard(){return board;}
+    public Player getPlayerRed(){return playerRed;}
+    public Player getPlayerBlue(){return playerBlue;}
+    public boolean isGameOver(){return gameOver;}
 }

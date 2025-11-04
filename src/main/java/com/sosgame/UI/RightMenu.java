@@ -1,6 +1,6 @@
 package com.sosgame.UI;
 
-import com.sosgame.Logic.Game;
+import com.sosgame.Logic.GameUtils;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,12 +15,12 @@ public class RightMenu {
     private RadioButton redO = new RadioButton("O"); // Radio button for letter O
     private Button replayGame = new Button("Replay Game"); // Button to replay the game
     private Button newGame = new Button("New Game"); // Button to start a new game
-    private Game game; // Game logic controller
+    private GameUtils gameUtils; // Game logic controller
 
 
     // Creates the right menu UI for Red player options
-    public VBox createRightMenu(Game gameController, gameUI gameUI) {
-        this.game = gameController;
+    public VBox createRightMenu(GameUtils gameController, gameUI gameUI) {
+        this.gameUtils = gameController;
 
 
         VBox rightMenu = new VBox(20); // Main container for right menu
@@ -87,9 +87,9 @@ public class RightMenu {
    // Changes the selected letter for Red player
     private void changeRedSelectedLetter(){
         if(redS.isSelected()){
-            game.getPlayerRed().setSelectedLetter('S');
+            gameUtils.getPlayerRed().setSelectedLetter('S');
         }else if(redO.isSelected()){
-            game.getPlayerRed().setSelectedLetter('O');
+            gameUtils.getPlayerRed().setSelectedLetter('O');
         }
     }
 

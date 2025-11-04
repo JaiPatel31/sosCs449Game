@@ -62,6 +62,25 @@ public class GameBoard {
         return letterBoard[row][col] == ' ' && ownerBoard[row][col] == ' ';
     }
 
+    //Get the letter board at specific cell
+    public char getLetterAt(int row, int col) {
+        return letterBoard[row][col];
+    }
+    //Get the owner board at specific cell
+    public char getOwnerAt(int row, int col) {
+        return ownerBoard[row][col];
+    }
+    //Checks if Board is full
+    public boolean isBoardFull() {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (letterBoard[i][j] == ' ' && ownerBoard[i][j] == ' ') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
     // Places a letter for a player at the given cell
     public void placeLetter(int row, int col, char letter, String player) {
         if (isCellEmpty(row, col) && (letter == 'S' || letter == 'O') && (player.equals("Red") || player.equals("Blue"))) {
