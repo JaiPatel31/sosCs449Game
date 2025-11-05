@@ -45,13 +45,16 @@ public class GameUtils {
     }
 
     private void autoStartIfComputerTurn() {
-        System.out.print("Auto-starting computer turn if applicable...\n");
+        System.out.println("Auto-starting computer turn if applicable...");
+
         while (!game.isGameOver() && getCurrentPlayer() instanceof ComputerPlayer) {
             Player ai = getCurrentPlayer();
+            System.out.println("Computer (" + ai.getColor() + ") making move...");
             int[] move = ((ComputerPlayer) ai).chooseMove(game.getBoard());
             game.makeMove(move[0], move[1]);
         }
     }
+
 
     // Player move delegation
     public void makeMove(int row, int col) {
