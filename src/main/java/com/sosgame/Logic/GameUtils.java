@@ -1,19 +1,26 @@
 package com.sosgame.Logic;
 
 import java.util.List;
+import com.sosgame.UI.GameBoardUI;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
+import javafx.util.Duration;
 
 public class GameUtils {
 
     private Game game;
     private GameBoard board;
     private String mode;
+    private GameBoardUI gameBoardUI;
 
-    public void startNewGame(int boardSize, String gameMode, String playerRedType, String playerBlueType) {
+    public void startNewGame(int boardSize, String gameMode, String playerRedType, String playerBlueType,GameBoardUI gameBoardUI) {
         this.board = new GameBoard(boardSize);
         this.mode = gameMode;
+        this.gameBoardUI = gameBoardUI;
 
         Player red = createPlayer("Red", playerRedType);
         Player blue = createPlayer("Blue", playerBlueType);
+
 
         initializeTurns(red, blue);
         this.game = createGame(gameMode, board, red, blue);
@@ -45,34 +52,40 @@ public class GameUtils {
     }
 
     private void autoStartIfComputerTurn() {
-        System.out.println("Auto-starting computer turn if applicable...");
-
-        while (!game.isGameOver() && getCurrentPlayer() instanceof ComputerPlayer) {
-            Player ai = getCurrentPlayer();
-            System.out.println("Computer (" + ai.getColor() + ") making move...");
-            int[] move = ((ComputerPlayer) ai).chooseMove(game.getBoard());
-            game.makeMove(move[0], move[1]);
+        // stop if game over or next player is human
+        if (game == null || game.isGameOver() || !(getCurrentPlayer() instanceof ComputerPlayer)) {
+            return;
         }
+
+        Player ai = getCurrentPlayer();
+
+        // make one move
+        int[] move = ((ComputerPlayer) ai).chooseMove(game.getBoard());
+        game.makeMove(move[0], move[1]);
+
+        // update the board immediately
+        gameBoardUI.updateBoardDisplay();
+
+        // schedule next computer move in 500 ms (non-blocking)
+        PauseTransition pause = new PauseTransition(Duration.millis(500));
+        pause.setOnFinished(e -> autoStartIfComputerTurn()); // recurse if still AI’s turn
+        pause.play();
     }
+
 
 
     // Player move delegation
     public void makeMove(int row, int col) {
         if (game == null || game.isGameOver()) return;
 
-        // Execute the human move
+        // human move
         game.makeMove(row, col);
+        gameBoardUI.updateBoardDisplay();
 
-        // If game ended, stop
-        if (game.isGameOver()) return;
-
-        // Check if next player is a computer
-        Player current = getCurrentPlayer();
-        if (current.type.equals("Computer")) {
-            int[] move = ((ComputerPlayer) current).chooseMove(game.getBoard());
-            game.makeMove(move[0], move[1]);
-        }
+        // now let the computer continue if needed
+        autoStartIfComputerTurn();
     }
+
 
 
     //Accessors
