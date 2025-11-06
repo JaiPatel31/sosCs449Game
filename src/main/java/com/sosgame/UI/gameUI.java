@@ -63,9 +63,6 @@ public class gameUI {
     private void resetGame(int size){
         root.setCenter(null); // Clear center
         root.setCenter(gameBoardUI.createGameBoard(size, gameUtils)); // Add new board
-        root.setLeft(null);
-        root.setRight(null);
-        root.setLeft(leftMenu.createLeftMenu(gameUtils)); // Re-add left menu
-        root.setRight(rightMenu.createRightMenu(gameUtils,this)); // Re-add right menu
+
     }
  }
