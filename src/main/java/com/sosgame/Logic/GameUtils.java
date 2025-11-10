@@ -1,10 +1,10 @@
 package com.sosgame.Logic;
 
+import javafx.util.Duration;
 import java.util.List;
 import com.sosgame.UI.GameBoardUI;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.util.Duration;
 
 public class GameUtils {
 
@@ -63,14 +63,15 @@ public class GameUtils {
         int[] move = ((ComputerPlayer) ai).chooseMove(game.getBoard());
         game.makeMove(move[0], move[1]);
 
-        // update the board immediately
-        gameBoardUI.updateBoardDisplay();
+        // update the board on JavaFX thread
+        Platform.runLater(() -> gameBoardUI.updateBoardDisplay());
 
         // schedule next computer move in 500 ms (non-blocking)
         PauseTransition pause = new PauseTransition(Duration.millis(500));
-        pause.setOnFinished(e -> autoStartIfComputerTurn()); // recurse if still AI’s turn
+        pause.setOnFinished(e -> autoStartIfComputerTurn()); // recurse if still AI's turn
         pause.play();
     }
+
 
 
 
