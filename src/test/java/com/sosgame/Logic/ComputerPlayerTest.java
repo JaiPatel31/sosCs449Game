@@ -83,7 +83,10 @@ public class ComputerPlayerTest {
         // Fill board without SOS
         for (int r = 0; r < 3; r++) {
             for (int c = 0; c < 3; c++) {
-                board.placeLetter(r, c, 'S', (r + c) % 2 == 0 ? "Red" : "Blue");
+                Player currentPlayer = humanPlayer.isTurn() ? humanPlayer : computerPlayer;
+                currentPlayer.setSelectedLetter('S');
+                game.makeMove(r, c);
+
             }
         }
 
@@ -98,9 +101,11 @@ public class ComputerPlayerTest {
         game.initialize();
 
         humanPlayer.setTurn(true);
-        game.makeMove(0, 0, 'S');
-        game.makeMove(0, 1, 'O');
-        game.makeMove(0, 2, 'S');
+        game.makeMove(0, 0 );
+        humanPlayer.setSelectedLetter('O');
+        game.makeMove(0, 1);
+        humanPlayer.setSelectedLetter('S');
+        game.makeMove(0, 2);
 
         int redScore = humanPlayer.getScore();
         int blueScore = computerPlayer.getScore();
@@ -154,7 +159,10 @@ public class ComputerPlayerTest {
         // Fill entire board
         for (int r = 0; r < 3; r++) {
             for (int c = 0; c < 3; c++) {
-                board.placeLetter(r, c, 'S', "Red");
+                Player currentPlayer = humanPlayer.isTurn() ? humanPlayer : computerPlayer;
+                currentPlayer.setSelectedLetter('S');
+                game.makeMove(r, c);
+
             }
         }
 
