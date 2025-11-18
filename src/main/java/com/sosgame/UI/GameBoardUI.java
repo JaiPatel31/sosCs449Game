@@ -148,4 +148,8 @@ public class GameBoardUI {
         }
         return null;
     }
+    public void updateBoardDisplay() {
+        refreshBoard();
+        refreshTurnLabel();
+    }
 }
