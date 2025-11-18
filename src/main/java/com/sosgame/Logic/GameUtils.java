@@ -13,7 +13,7 @@ public class GameUtils {
     private String mode;
     private GameBoardUI gameBoardUI;
 
-    public void startNewGame(int boardSize, String gameMode, String playerRedType, String playerBlueType,GameBoardUI gameBoardUI) {
+    public void startNewGame(int boardSize, String gameMode, String playerRedType, String playerBlueType,GameBoardUI gameBoardUI, boolean isRecording) {
         this.board = new GameBoard(boardSize);
         this.mode = gameMode;
         this.gameBoardUI = gameBoardUI;
@@ -23,7 +23,11 @@ public class GameUtils {
 
 
         initializeTurns(red, blue);
-        this.game = createGame(gameMode, board, red, blue);
+
+
+        this.game = createGame(gameMode, board, red, blue,isRecording);
+
+
         game.initialize();
 
         autoStartIfComputerTurn();
@@ -44,11 +48,11 @@ public class GameUtils {
     }
 
     // Create game based on mode
-    private Game createGame(String mode, GameBoard board, Player red, Player blue) {
+    private Game createGame(String mode, GameBoard board, Player red, Player blue,boolean isRecording) {
         if ("Simple".equalsIgnoreCase(mode)) {
-            return new SimpleGame(board, red, blue);
+            return new SimpleGame(board, red, blue,isRecording);
         }
-        return new GeneralGame(board, red, blue);
+        return new GeneralGame(board, red, blue,isRecording);
     }
 
     private void autoStartIfComputerTurn() {

@@ -13,6 +13,8 @@ public abstract class Game {
     protected String mode;
     // Whether the game is finished
     protected boolean gameOver;
+    // Whether the game is being recorded (for replay)
+    protected boolean isRecording = false;
     // Track the SOS lines formed during play for UI highlighting
     protected List<SOSLine> completedSOSLines = new ArrayList<>();
     public static class SOSLine {
@@ -48,6 +50,15 @@ public abstract class Game {
         this.gameOver = false;
     }
 
+    // Overloaded constructor to include recording option
+    public Game(GameBoard board, String mode, Player red, Player blue, boolean isRecording) {
+        this.board = board;
+        this.mode = mode;
+        this.playerRed = red;
+        this.playerBlue = blue;
+        this.gameOver = false;
+        this.isRecording = isRecording;
+    }
     // Initialize or reset runtime state before starting a game
     public void initialize() {
         playerRed.resetScore();

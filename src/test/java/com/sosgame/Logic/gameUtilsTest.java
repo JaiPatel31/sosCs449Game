@@ -22,7 +22,7 @@ public class gameUtilsTest {
 
     @Test
     public void testStartNewSimpleGameInitializesCorrectly() {
-        gameUtils.startNewGame(5, "Simple", "Human", "Computer", new GameBoardUI());
+        gameUtils.startNewGame(5, "Simple", "Human", "Computer", new GameBoardUI(),false);
 
         assertNotNull(gameUtils.getGameBoard());
         assertEquals(5, gameUtils.getGameBoard().getSize());
@@ -40,7 +40,7 @@ public class gameUtilsTest {
 
     @Test
     public void testStartNewGeneralGameInitializesCorrectly() {
-        gameUtils.startNewGame(5, "General", "Human", "Computer",new GameBoardUI());
+        gameUtils.startNewGame(5, "General", "Human", "Computer",new GameBoardUI(),false);
 
         assertNotNull(gameUtils.getGameBoard());
         assertEquals(5, gameUtils.getGameBoard().getSize());
@@ -58,11 +58,11 @@ public class gameUtilsTest {
 
     @Test
     public void testStartNewGameResetsPreviousGame() {
-        gameUtils.startNewGame(5, "General", "Human", "Human",new GameBoardUI());
+        gameUtils.startNewGame(5, "General", "Human", "Human",new GameBoardUI(),false);
         gameUtils.getGameBoard().placeLetter(1, 1, 'S', "Red");
 
         // Start a new game should reset everything
-        gameUtils.startNewGame(6, "Simple", "AI", "Human",new GameBoardUI());
+        gameUtils.startNewGame(6, "Simple", "AI", "Human",new GameBoardUI(),false);
 
         assertEquals(6, gameUtils.getGameBoard().getSize());
         assertEquals("Simple", gameUtils.getGameMode());
@@ -77,7 +77,7 @@ public class gameUtilsTest {
 
     @Test
     public void testTurnSwitchesFromBlueToRedAfterMove() {
-        gameUtils.startNewGame(3, "Simple", "Human", "Human",new GameBoardUI());
+        gameUtils.startNewGame(3, "Simple", "Human", "Human",new GameBoardUI(),false);
 
         gameUtils.getPlayerBlue().setSelectedLetter('S');
         gameUtils.makeMove(0, 0);
@@ -88,7 +88,7 @@ public class gameUtilsTest {
 
     @Test
     public void testTurnSwitchesFromRedToBlueAfterMove() {
-        gameUtils.startNewGame(3, "Simple", "Human", "Human",new GameBoardUI());
+        gameUtils.startNewGame(3, "Simple", "Human", "Human",new GameBoardUI(),false);
 
         // Force Red’s turn
         gameUtils.getPlayerRed().setTurn(true);
@@ -105,7 +105,7 @@ public class gameUtilsTest {
 
     @Test
     public void testMakeMoveByRedPlayerPlacesCorrectLetterAndOwner() {
-        gameUtils.startNewGame(3, "Simple", "Human", "Human",new GameBoardUI());
+        gameUtils.startNewGame(3, "Simple", "Human", "Human",new GameBoardUI(),false);
 
         gameUtils.getPlayerBlue().setTurn(false);
         gameUtils.getPlayerRed().setTurn(true);
@@ -123,7 +123,7 @@ public class gameUtilsTest {
 
     @Test
     public void testMakeMoveByBluePlayerPlacesCorrectLetterAndOwner() {
-        gameUtils.startNewGame(3, "Simple", "Human", "Human",new GameBoardUI());
+        gameUtils.startNewGame(3, "Simple", "Human", "Human",new GameBoardUI(),false);
 
         gameUtils.getPlayerBlue().setSelectedLetter('O');
         gameUtils.makeMove(1, 1);
@@ -138,7 +138,7 @@ public class gameUtilsTest {
 
     @Test
     public void testMakeMoveThrowsWhenInvalidCell() {
-        gameUtils.startNewGame(3, "Simple", "Human", "Human",new GameBoardUI());
+        gameUtils.startNewGame(3, "Simple", "Human", "Human",new GameBoardUI(),false);
 
         gameUtils.getPlayerBlue().setSelectedLetter('S');
         gameUtils.makeMove(0, 0);
@@ -151,7 +151,7 @@ public class gameUtilsTest {
 
     @Test
     public void testMakeMoveMaintainsGameIntegrity() {
-        gameUtils.startNewGame(3, "General", "Human", "Human",new GameBoardUI());
+        gameUtils.startNewGame(3, "General", "Human", "Human",new GameBoardUI(),false);
 
         gameUtils.getPlayerBlue().setSelectedLetter('O');
         gameUtils.makeMove(0, 1);

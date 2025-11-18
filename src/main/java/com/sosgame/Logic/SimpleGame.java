@@ -2,9 +2,9 @@ package com.sosgame.Logic;
 
 public class SimpleGame extends Game {
     // Simple game variant: first SOS wins
-    public SimpleGame(GameBoard board, Player red, Player blue) {
+    public SimpleGame(GameBoard board, Player red, Player blue, Boolean isRecording) {
         // Call base constructor with mode name
-        super(board, "Simple", red, blue);
+        super(board, "Simple", red, blue,isRecording);
     }
 
     @Override
