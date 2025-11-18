@@ -15,6 +15,8 @@ public abstract class Game {
     protected boolean gameOver;
     // Whether the game is being recorded (for replay)
     protected boolean isRecording = false;
+    // Recorder instance for saving moves if recording is enabled
+    private GameRecorder recorder;
     // Track the SOS lines formed during play for UI highlighting
     protected List<SOSLine> completedSOSLines = new ArrayList<>();
     public static class SOSLine {
@@ -70,6 +72,11 @@ public abstract class Game {
         resetSOSLines();
         playerRed.setTurn(false);
         playerBlue.setTurn(true); // blue starts
+
+        if(isRecording) {
+                recorder = new GameRecorder();
+                recorder.start(mode, board.getSize());
+        }
     }
 
     // Subclasses implement how a move is applied (Simple vs General rules)
@@ -150,6 +157,19 @@ public abstract class Game {
         playerBlue.setTurn(!playerBlue.isTurn());
     }
 
+    //Recording the move function
+    public void recordMove(int r, int c, char letter, Player player) {
+        if (!isRecording || recorder == null) return;
+
+        recorder.recordMove(r, c, letter, player.getColor());
+    }
+    //stop recording function
+    public void stopRecordingIfActive() {
+        if (isRecording && recorder != null) {
+            recorder.stop();
+            isRecording = false;
+        }
+    }
     // Getters
     public GameBoard getBoard(){return board;}
     public Player getPlayerRed(){return playerRed;}

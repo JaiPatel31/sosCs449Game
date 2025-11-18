@@ -17,7 +17,7 @@ public class GeneralGame extends Game {
         Player current = playerBlue.isTurn() ? playerBlue : playerRed;
         char letter = current.getSelectedLetter();
         board.placeLetter(r, c, letter, current.getColor());
-
+        recordMove(r, c, letter, current);
         // Use shared checkSOS() to record lines and compute score gained
         int scoreGained = countAndRecordSOS(r, c, current);
 
@@ -50,5 +50,6 @@ public class GeneralGame extends Game {
         if (playerBlue.getScore() > playerRed.getScore()) playerBlue.setWinner(true);
         else if (playerRed.getScore() > playerBlue.getScore()) playerRed.setWinner(true);
         gameOver = true;
+        stopRecordingIfActive();
     }
 }
