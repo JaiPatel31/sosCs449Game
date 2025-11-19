@@ -14,6 +14,9 @@ public class App extends Application {
         GameUI gameUI = new GameUI();
         Scene scene = new Scene(gameUI.createGUI(), 600, 600);
 
+
+        gameUI.setStage(PrimaryStage);
+
         PrimaryStage.setTitle("SOS Game");
         PrimaryStage.setScene(scene);
 

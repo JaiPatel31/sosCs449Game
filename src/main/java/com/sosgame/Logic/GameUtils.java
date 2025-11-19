@@ -33,6 +33,28 @@ public class GameUtils {
         autoStartIfComputerTurn();
     }
 
+    public void startReplayGame(GameReplayer replayer, GameBoardUI ui) {
+
+        this.board = new GameBoard(replayer.getBoardSize());
+
+        // create players as replay-driven computers
+        Player red = new ReplayComputerPlayer("Red", replayer);
+        Player blue = new ReplayComputerPlayer("Blue", replayer);
+
+        // turn order same as computer vs computer
+        blue.setTurn(true);
+        red.setTurn(false);
+
+        this.game = createGame(replayer.getMode(), board, red, blue, false);
+
+        this.gameBoardUI = ui;
+
+        game.initialize();
+
+        // start the loop exactly like computer vs computer
+        autoStartIfComputerTurn();
+    }
+
     // Set starting turn
     private void initializeTurns(Player red, Player blue) {
         blue.setTurn(true);

@@ -1,7 +1,10 @@
 package com.sosgame.UI;
+import com.sosgame.Logic.GameReplayer;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.*;
 import com.sosgame.Logic.GameUtils;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.io.File;
@@ -13,7 +16,7 @@ public class GameUI {
     private GameBoardUI gameBoardUI; // Game board UI
     private BorderPane root; // Main layout container
     private GameUtils gameUtils; // Game logic controller
-
+    private Stage stage;
     // Creates the main GUI and returns the root layout
     public BorderPane createGUI(){
         gameUtils = new GameUtils(); // Initialize game logic
@@ -69,23 +72,20 @@ public class GameUI {
 
     }
 
-    public void startReplay() {
-        // 1. Let user pick file
-        JFileChooser chooser = new JFileChooser();
-        int result = chooser.showOpenDialog(null);
-        if (result != JFileChooser.APPROVE_OPTION) return;
+    public void onReplayGame() {
 
-        File file = chooser.getSelectedFile();
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Open Replay File");
+        File selected = fc.showOpenDialog(stage);
 
-        // 2. Load replay file
+        if (selected == null) return;
 
+        GameReplayer replayer = new GameReplayer();
+        replayer.load(selected.getAbsolutePath());
 
-        // 3. Reset the board for replay
-
-        // 4. Disable user clicks during replay
-        gameBoardUI.setInteractive(false);
-
-        // 5. Start animation
+        gameUtils.startReplayGame(replayer, gameBoardUI);
     }
-
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 }
