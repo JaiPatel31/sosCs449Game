@@ -111,7 +111,7 @@ public class gameUITest {
         gameUIInstance.startNewGame();
 
         // Verify that GameUtils.startNewGame was called with correct arguments
-        verify(mockGameUtils, times(1)).startNewGame(5, "Simple", "Human", "Computer", mockGameBoardUI);
+        verify(mockGameUtils, times(1)).startNewGame(5, "Simple", "Human", "Computer", mockGameBoardUI, false);
         // Check that the game board is set in the center of the UI
         assertNotNull(((BorderPane) getPrivateField(gameUIInstance, "root")).getCenter());
     }
@@ -126,7 +126,7 @@ public class gameUITest {
 
         gameUIInstance.startNewGame();
 
-        verify(mockGameUtils).startNewGame(5, "Simple","Human", "Human", mockGameBoardUI);
+        verify(mockGameUtils).startNewGame(5, "Simple","Human", "Human", mockGameBoardUI, false);
     }
 
     @Test
@@ -145,7 +145,7 @@ public class gameUITest {
             gameUIInstance.startNewGame();
             // After starting new game, the center should be replaced
             assertEquals(newBoard, root.getCenter());
-            verify(mockGameUtils).startNewGame(7,"General", "Human", "Computer" , mockGameBoardUI);
+            verify(mockGameUtils).startNewGame(7,"General", "Human", "Computer" , mockGameBoardUI, false);
         });
 
         try { Thread.sleep(500); } catch (InterruptedException ignored) {}
@@ -162,7 +162,7 @@ public class gameUITest {
 
         doThrow(new IllegalArgumentException("Board size must be between 5 and 11."))
                 .when(mockGameUtils)
-                .startNewGame(anyInt(), anyString(), anyString(), anyString(), any());
+                .startNewGame(anyInt(), anyString(), anyString(), anyString(), any(), anyBoolean());
 
         // Mock Alert creation safely
         try (MockedConstruction<Alert> mocked = mockConstruction(Alert.class,
@@ -189,7 +189,7 @@ public class gameUITest {
         // Simulate exception thrown for invalid size
         doThrow(new IllegalArgumentException("Board size must be between 5 and 11."))
                 .when(mockGameUtils)
-                .startNewGame(anyInt(), anyString(), anyString(), anyString(), any());
+                .startNewGame(anyInt(), anyString(), anyString(), anyString(), any(), anyBoolean());
 
         try (MockedConstruction<Alert> mocked = mockConstruction(Alert.class,
                 (mock, context) -> when(mock.showAndWait()).thenReturn(Optional.of(ButtonType.OK)))) {
@@ -200,7 +200,7 @@ public class gameUITest {
             try { Thread.sleep(500); } catch (InterruptedException ignored) {}
 
             // Should fall back to default size 5 and selected mode
-            verify(mockGameUtils).startNewGame(5, "General", "Human", "Human", mockGameBoardUI );
+            verify(mockGameUtils).startNewGame(5, "General", "Human", "Human", mockGameBoardUI, false );
         }
     }
 
