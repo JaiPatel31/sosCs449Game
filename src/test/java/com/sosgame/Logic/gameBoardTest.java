@@ -10,8 +10,8 @@ public class gameBoardTest {
     public void testValidBoardInitialization() {
         GameBoard board = new GameBoard(5);
         assertEquals(5, board.getSize());
-        assertEquals(' ', board.getletterBoard()[0][0]);
-        assertEquals(' ', board.getownerBoard()[0][0]);
+        assertEquals(' ', board.getLetterBoard()[0][0]);
+        assertEquals(' ', board.getOwnerBoard()[0][0]);
     }
 
     @Test
@@ -32,9 +32,9 @@ public class gameBoardTest {
         original.placeLetter(2, 2, 'S', "Red");
 
         GameBoard copy = new GameBoard(original);
-        assertNotSame(original.getletterBoard(), copy.getletterBoard());
-        assertEquals('S', copy.getletterBoard()[2][2]);
-        assertEquals('R', copy.getownerBoard()[2][2]);
+        assertNotSame(original.getLetterBoard(), copy.getLetterBoard());
+        assertEquals('S', copy.getLetterBoard()[2][2]);
+        assertEquals('R', copy.getOwnerBoard()[2][2]);
     }
 
     //Cell Tests
@@ -56,16 +56,16 @@ public class gameBoardTest {
     public void testPlaceLetterValidRed() {
         GameBoard board = new GameBoard(5);
         board.placeLetter(0, 0, 'S', "Red");
-        assertEquals('S', board.getletterBoard()[0][0]);
-        assertEquals('R', board.getownerBoard()[0][0]);
+        assertEquals('S', board.getLetterBoard()[0][0]);
+        assertEquals('R', board.getOwnerBoard()[0][0]);
     }
 
     @Test
     public void testPlaceLetterValidBlue() {
         GameBoard board = new GameBoard(5);
         board.placeLetter(0, 1, 'O', "Blue");
-        assertEquals('O', board.getletterBoard()[0][1]);
-        assertEquals('B', board.getownerBoard()[0][1]);
+        assertEquals('O', board.getLetterBoard()[0][1]);
+        assertEquals('B', board.getOwnerBoard()[0][1]);
     }
 
     @Test
@@ -98,8 +98,8 @@ public class gameBoardTest {
     public void testPlaceLetterAtEdgeOfBoard() {
         GameBoard board = new GameBoard(5);
         board.placeLetter(4, 4, 'O', "Blue");
-        assertEquals('O', board.getletterBoard()[4][4]);
-        assertEquals('B', board.getownerBoard()[4][4]);
+        assertEquals('O', board.getLetterBoard()[4][4]);
+        assertEquals('B', board.getOwnerBoard()[4][4]);
     }
 
     @Test
@@ -110,7 +110,7 @@ public class gameBoardTest {
         copy.placeLetter(1, 1, 'O', "Blue");
 
         // Original should not be affected by changes in copy
-        assertEquals(' ', board.getletterBoard()[1][1]);
-        assertEquals('O', copy.getletterBoard()[1][1]);
+        assertEquals(' ', board.getLetterBoard()[1][1]);
+        assertEquals('O', copy.getLetterBoard()[1][1]);
     }
 }

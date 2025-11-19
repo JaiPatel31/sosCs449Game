@@ -84,7 +84,7 @@ public abstract class Game {
 
     // Shared SOS pattern check invoked after placing a letter at (r,c)
     protected boolean checkSOS(int r, int c) {
-        char[][] grid = board.getletterBoard();
+        char[][] grid = board.getLetterBoard();
         char ch = grid[r][c];
         // Directions to check: down, right, diag down-right, diag down-left
         int[][] dirs = {{1,0},{0,1},{1,1},{1,-1}};
