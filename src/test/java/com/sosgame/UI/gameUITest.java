@@ -5,13 +5,11 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
-import org.mockito.Mockito;
 
 import java.util.Optional;
 
@@ -20,7 +18,7 @@ import static org.mockito.Mockito.*;
 
 public class gameUITest {
 
-    private gameUI gameUIInstance;
+    private GameUI gameUIInstance;
     private TopMenu mockTopMenu;
     private LeftMenu mockLeftMenu;
     private RightMenu mockRightMenu;
@@ -46,7 +44,7 @@ public class gameUITest {
     @BeforeEach
     public void setUp() {
         // Prepare the test subject and mocks
-        gameUIInstance = new gameUI();
+        gameUIInstance = new GameUI();
         mockTopMenu = mock(TopMenu.class);
         mockLeftMenu = mock(LeftMenu.class);
         mockRightMenu = mock(RightMenu.class);
@@ -55,27 +53,27 @@ public class gameUITest {
 
         // Inject mocks using reflection (since fields are private)
         try {
-            var topField = gameUI.class.getDeclaredField("topMenu");
+            var topField = GameUI.class.getDeclaredField("topMenu");
             topField.setAccessible(true);
             topField.set(gameUIInstance, mockTopMenu);
 
-            var leftField = gameUI.class.getDeclaredField("leftMenu");
+            var leftField = GameUI.class.getDeclaredField("leftMenu");
             leftField.setAccessible(true);
             leftField.set(gameUIInstance, mockLeftMenu);
 
-            var rightField = gameUI.class.getDeclaredField("rightMenu");
+            var rightField = GameUI.class.getDeclaredField("rightMenu");
             rightField.setAccessible(true);
             rightField.set(gameUIInstance, mockRightMenu);
 
-            var gameBoardField = gameUI.class.getDeclaredField("gameBoardUI");
+            var gameBoardField = GameUI.class.getDeclaredField("gameBoardUI");
             gameBoardField.setAccessible(true);
             gameBoardField.set(gameUIInstance, mockGameBoardUI);
 
-            var gameUtilsField = gameUI.class.getDeclaredField("gameUtils");
+            var gameUtilsField = GameUI.class.getDeclaredField("gameUtils");
             gameUtilsField.setAccessible(true);
             gameUtilsField.set(gameUIInstance, mockGameUtils);
 
-            var rootField = gameUI.class.getDeclaredField("root");
+            var rootField = GameUI.class.getDeclaredField("root");
             rootField.setAccessible(true);
             rootField.set(gameUIInstance, new BorderPane());
         } catch (Exception e) {
@@ -87,7 +85,7 @@ public class gameUITest {
 
     @Test
     public void testCreateGUIInitializesLayoutAndComponents() {
-        gameUI ui = new gameUI();
+        GameUI ui = new GameUI();
         BorderPane root = ui.createGUI();
 
         assertNotNull(root);

@@ -19,7 +19,7 @@ public class RightMenu {
 
 
     // Creates the right menu UI for Red player options
-    public VBox createRightMenu(GameUtils gameController, gameUI gameUI) {
+    public VBox createRightMenu(GameUtils gameController, GameUI gameUI) {
         this.gameUtils = gameController;
 
 
@@ -64,6 +64,7 @@ public class RightMenu {
         // Replay and New Game Buttons
         replayGame = new Button("Replay Game"); // Button to replay game
         replayGame.setMaxWidth(Double.MAX_VALUE);
+        replayGame.setOnAction(e -> gameUI.startReplay()); // Replay game on click
         newGame = new Button("New Game"); // Button to start new game
         newGame.setMaxWidth(Double.MAX_VALUE);
         VBox rightButtonBox = new VBox(10, replayGame, newGame); // Container for buttons

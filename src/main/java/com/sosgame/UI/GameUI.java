@@ -3,7 +3,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.*;
 import com.sosgame.Logic.GameUtils;
 
-public class gameUI {
+import javax.swing.*;
+import java.io.File;
+
+public class GameUI {
     private TopMenu topMenu; // Top menu bar
     private LeftMenu leftMenu; // Left menu panel
     private RightMenu rightMenu; // Right menu panel
@@ -65,4 +68,24 @@ public class gameUI {
         root.setCenter(gameBoardUI.createGameBoard(size, gameUtils)); // Add new board
 
     }
- }
+
+    public void startReplay() {
+        // 1. Let user pick file
+        JFileChooser chooser = new JFileChooser();
+        int result = chooser.showOpenDialog(null);
+        if (result != JFileChooser.APPROVE_OPTION) return;
+
+        File file = chooser.getSelectedFile();
+
+        // 2. Load replay file
+
+
+        // 3. Reset the board for replay
+
+        // 4. Disable user clicks during replay
+        gameBoardUI.setInteractive(false);
+
+        // 5. Start animation
+    }
+
+}

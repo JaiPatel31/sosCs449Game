@@ -152,4 +152,12 @@ public class GameBoardUI {
         refreshBoard();
         refreshTurnLabel();
     }
+
+    protected void setInteractive(boolean interactive) {
+        for (Node node : boardGrid.getChildren()) {
+            if (node instanceof Button cell) {
+                cell.setDisable(!interactive);
+            }
+        }
+    }
 }
