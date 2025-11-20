@@ -43,12 +43,12 @@ public class GameBoard {
     }
 
     // Returns the owner board
-    public char[][] getownerBoard() {
+    public char[][] getOwnerBoard() {
         return ownerBoard;
     }
 
     // Returns the letter board
-    public char[][] getletterBoard() {
+    public char[][] getLetterBoard() {
         return letterBoard;
     }
 

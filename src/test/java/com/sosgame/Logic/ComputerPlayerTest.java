@@ -21,7 +21,7 @@ public class ComputerPlayerTest {
     // AC 8.1 & 9.1: Game starts with player and computer
     @Test
     void testGameStartsWithPlayerAndComputer() {
-        SimpleGame game = new SimpleGame(board, humanPlayer, computerPlayer);
+        SimpleGame game = new SimpleGame(board, humanPlayer, computerPlayer,false);
         game.initialize();
 
         assertNotNull(game.getPlayerRed());
@@ -60,7 +60,7 @@ public class ComputerPlayerTest {
     // AC 8.4: Turn indication
     @Test
     void testTurnIndicationChanges() {
-        SimpleGame game = new SimpleGame(board, humanPlayer, computerPlayer);
+        SimpleGame game = new SimpleGame(board, humanPlayer, computerPlayer,false);
         game.initialize();
 
         computerPlayer.setTurn(true);
@@ -77,7 +77,7 @@ public class ComputerPlayerTest {
     // AC 8.5 & 9.5: Game completion and winner determination
     @Test
     void testGameCompletionSimpleMode() {
-        SimpleGame game = new SimpleGame(board, humanPlayer, computerPlayer);
+        SimpleGame game = new SimpleGame(board, humanPlayer, computerPlayer,false);
         game.initialize();
 
         // Fill board without SOS
@@ -97,7 +97,7 @@ public class ComputerPlayerTest {
     // AC 9.4: Scoring updates when SOS formed
     @Test
     void testScoringUpdatesOnSOS() {
-        GeneralGame game = new GeneralGame(board, humanPlayer, computerPlayer);
+        GeneralGame game = new GeneralGame(board, humanPlayer, computerPlayer, false);
         game.initialize();
 
         humanPlayer.setTurn(true);
@@ -118,7 +118,7 @@ public class ComputerPlayerTest {
         ComputerPlayer computerRed = new ComputerPlayer("Red");
         ComputerPlayer computerBlue = new ComputerPlayer("Blue");
 
-        SimpleGame game = new SimpleGame(board, computerRed, computerBlue);
+        SimpleGame game = new SimpleGame(board, computerRed, computerBlue,false);
         game.initialize();
 
         assertTrue(computerRed instanceof ComputerPlayer);
@@ -153,7 +153,7 @@ public class ComputerPlayerTest {
     // AC 10.5: Game stops automatically when complete
     @Test
     void testGameStopsWhenComplete() {
-        SimpleGame game = new SimpleGame(board, computerPlayer, humanPlayer);
+        SimpleGame game = new SimpleGame(board, computerPlayer, humanPlayer,false);
         game.initialize();
 
         // Fill entire board

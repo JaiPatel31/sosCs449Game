@@ -1,16 +1,22 @@
 package com.sosgame.UI;
+import com.sosgame.Logic.GameReplayer;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.*;
 import com.sosgame.Logic.GameUtils;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
-public class gameUI {
+import javax.swing.*;
+import java.io.File;
+
+public class GameUI {
     private TopMenu topMenu; // Top menu bar
     private LeftMenu leftMenu; // Left menu panel
     private RightMenu rightMenu; // Right menu panel
     private GameBoardUI gameBoardUI; // Game board UI
     private BorderPane root; // Main layout container
     private GameUtils gameUtils; // Game logic controller
-
+    private Stage stage;
     // Creates the main GUI and returns the root layout
     public BorderPane createGUI(){
         gameUtils = new GameUtils(); // Initialize game logic
@@ -43,7 +49,7 @@ public class gameUI {
 
     // Handles invalid board size, starts game with default size
     private void illegalSize(IllegalArgumentException ex){
-        gameUtils.startNewGame(5, topMenu.getMode(),rightMenu.getRedType(), leftMenu.getBlueType(), gameBoardUI); // Default size 5
+        gameUtils.startNewGame(5, topMenu.getMode(),rightMenu.getRedType(), leftMenu.getBlueType(), gameBoardUI,leftMenu.isRecordGame()); // Default size 5
 
         resetGame(5);
         Alert alert = new Alert(Alert.AlertType.ERROR); // Show error alert
@@ -56,7 +62,7 @@ public class gameUI {
     // Handles valid board size, starts game with user size
     private void validSize(){
         int size = topMenu.getBoardSize();
-        gameUtils.startNewGame(size, topMenu.getMode(),rightMenu.getRedType(), leftMenu.getBlueType(), gameBoardUI); // Start game
+        gameUtils.startNewGame(size, topMenu.getMode(),rightMenu.getRedType(), leftMenu.getBlueType(), gameBoardUI, leftMenu.isRecordGame()); // Start game
         resetGame(size);
     }
 
@@ -65,4 +71,21 @@ public class gameUI {
         root.setCenter(gameBoardUI.createGameBoard(size, gameUtils)); // Add new board
 
     }
- }
+
+    public void onReplayGame() {
+
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Open Replay File");
+        File selected = fc.showOpenDialog(stage);
+
+        if (selected == null) return;
+
+        GameReplayer replayer = new GameReplayer();
+        replayer.load(selected.getAbsolutePath());
+
+        gameUtils.startReplayGame(replayer, gameBoardUI);
+    }
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+}

@@ -3,9 +3,9 @@ package com.sosgame.Logic;
 public class GeneralGame extends Game {
 
     // General game rules implementation
-    public GeneralGame(GameBoard board, Player red, Player blue) {
+    public GeneralGame(GameBoard board, Player red, Player blue, boolean isRecording) {
         // Call base constructor with mode name
-        super(board, "General", red, blue);
+        super(board, "General", red, blue,isRecording);
     }
 
     @Override
@@ -17,7 +17,7 @@ public class GeneralGame extends Game {
         Player current = playerBlue.isTurn() ? playerBlue : playerRed;
         char letter = current.getSelectedLetter();
         board.placeLetter(r, c, letter, current.getColor());
-
+        recordMove(r, c, letter, current);
         // Use shared checkSOS() to record lines and compute score gained
         int scoreGained = countAndRecordSOS(r, c, current);
 
@@ -50,5 +50,6 @@ public class GeneralGame extends Game {
         if (playerBlue.getScore() > playerRed.getScore()) playerBlue.setWinner(true);
         else if (playerRed.getScore() > playerBlue.getScore()) playerRed.setWinner(true);
         gameOver = true;
+        stopRecordingIfActive();
     }
 }

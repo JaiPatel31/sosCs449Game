@@ -13,6 +13,10 @@ public abstract class Game {
     protected String mode;
     // Whether the game is finished
     protected boolean gameOver;
+    // Whether the game is being recorded (for replay)
+    protected boolean isRecording = false;
+    // Recorder instance for saving moves if recording is enabled
+    private GameRecorder recorder;
     // Track the SOS lines formed during play for UI highlighting
     protected List<SOSLine> completedSOSLines = new ArrayList<>();
     public static class SOSLine {
@@ -48,6 +52,15 @@ public abstract class Game {
         this.gameOver = false;
     }
 
+    // Overloaded constructor to include recording option
+    public Game(GameBoard board, String mode, Player red, Player blue, boolean isRecording) {
+        this.board = board;
+        this.mode = mode;
+        this.playerRed = red;
+        this.playerBlue = blue;
+        this.gameOver = false;
+        this.isRecording = isRecording;
+    }
     // Initialize or reset runtime state before starting a game
     public void initialize() {
         playerRed.resetScore();
@@ -59,6 +72,11 @@ public abstract class Game {
         resetSOSLines();
         playerRed.setTurn(false);
         playerBlue.setTurn(true); // blue starts
+
+        if(isRecording) {
+                recorder = new GameRecorder();
+                recorder.start(mode, board.getSize());
+        }
     }
 
     // Subclasses implement how a move is applied (Simple vs General rules)
@@ -66,7 +84,7 @@ public abstract class Game {
 
     // Shared SOS pattern check invoked after placing a letter at (r,c)
     protected boolean checkSOS(int r, int c) {
-        char[][] grid = board.getletterBoard();
+        char[][] grid = board.getLetterBoard();
         char ch = grid[r][c];
         // Directions to check: down, right, diag down-right, diag down-left
         int[][] dirs = {{1,0},{0,1},{1,1},{1,-1}};
@@ -139,6 +157,19 @@ public abstract class Game {
         playerBlue.setTurn(!playerBlue.isTurn());
     }
 
+    //Recording the move function
+    public void recordMove(int r, int c, char letter, Player player) {
+        if (!isRecording || recorder == null) return;
+
+        recorder.recordMove(r, c, letter, player.getColor());
+    }
+    //stop recording function
+    public void stopRecordingIfActive() {
+        if (isRecording && recorder != null) {
+            recorder.stop();
+            isRecording = false;
+        }
+    }
     // Getters
     public GameBoard getBoard(){return board;}
     public Player getPlayerRed(){return playerRed;}

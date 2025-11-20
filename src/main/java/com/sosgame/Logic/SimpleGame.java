@@ -2,9 +2,9 @@ package com.sosgame.Logic;
 
 public class SimpleGame extends Game {
     // Simple game variant: first SOS wins
-    public SimpleGame(GameBoard board, Player red, Player blue) {
+    public SimpleGame(GameBoard board, Player red, Player blue, Boolean isRecording) {
         // Call base constructor with mode name
-        super(board, "Simple", red, blue);
+        super(board, "Simple", red, blue,isRecording);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class SimpleGame extends Game {
 
         // Place the letter on the board
         board.placeLetter(r, c, letter, current.getColor());
-
+        recordMove(r, c, letter, current);
         checkWin(current,r,c);
     }
 
@@ -32,9 +32,11 @@ public class SimpleGame extends Game {
         if (checkSOS(r, c)) {
             current.setWinner(true);
             gameOver = true;
+            stopRecordingIfActive();
         } else if (board.isBoardFull()) {
             // If board is full without SOS, game ends in draw (no winner set)
             gameOver = true;
+            stopRecordingIfActive();
         } else {
             // Otherwise switch turn
             switchTurn();

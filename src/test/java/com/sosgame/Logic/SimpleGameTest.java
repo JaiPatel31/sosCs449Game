@@ -16,7 +16,7 @@ public class SimpleGameTest {
         board = new GameBoard(3);
         red = new Player("Red", "Human");
         blue = new Player("Blue", "Human");
-        game = new SimpleGame(board, red, blue);
+        game = new SimpleGame(board, red, blue,false);
         game.initialize();
     }
 

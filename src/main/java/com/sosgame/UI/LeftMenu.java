@@ -91,4 +91,8 @@ public class LeftMenu {
         }
     }
 
+    protected boolean isRecordGame() {
+        return recordGame.isSelected();
+    }
+
 }
