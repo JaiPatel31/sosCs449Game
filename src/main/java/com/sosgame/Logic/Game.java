@@ -63,22 +63,14 @@ public abstract class Game {
     }
     // Initialize or reset runtime state before starting a game
     public void initialize() {
-        playerRed.resetScore();
-        playerBlue.resetScore();
-        playerRed.setWinner(false);
-        playerBlue.setWinner(false);
-        gameOver = false;
-        // Clear any recorded SOS lines when starting/resetting a game
-        resetSOSLines();
-        playerRed.setTurn(false);
-        playerBlue.setTurn(true); // blue starts
-
-        if(isRecording) {
-                recorder = new GameRecorder();
-                recorder.start(mode, board.getSize());
-        }
+        resetPlayers();
+        resetGameState();
+        resetTurnOrder();
+        initializeRecordingIfNeeded();
     }
-
+    public void enableRecording() {
+        isRecording = true;
+    }
     // Subclasses implement how a move is applied (Simple vs General rules)
     public abstract void makeMove(int row, int col);
 
@@ -87,13 +79,13 @@ public abstract class Game {
         char[][] grid = board.getLetterBoard();
         char ch = grid[r][c];
         // Directions to check: down, right, diag down-right, diag down-left
-        int[][] dirs = {{1,0},{0,1},{1,1},{1,-1}};
+        int[][] dirs = buildDirections();
         // Determine which player made the move (the one whose turn it is)
-        Player currentPlayer = playerBlue.isTurn() ? playerBlue : playerRed;
+        Player currentPlayer = resolveCurrentPlayer();
 
         if (ch == 'O') {
             return checkSOSWithO(grid, r, c, dirs, currentPlayer);
-        } else if (ch == 'S') {
+        } if (ch == 'S') {
             return checkSOSWithS(grid, r, c, dirs, currentPlayer);
         }
         return false;
@@ -155,6 +147,41 @@ public abstract class Game {
     protected void switchTurn() {
         playerRed.setTurn(!playerRed.isTurn());
         playerBlue.setTurn(!playerBlue.isTurn());
+    }
+
+    private void resetPlayers() {
+        playerRed.resetScore();
+        playerBlue.resetScore();
+        playerRed.setWinner(false);
+        playerBlue.setWinner(false);
+    }
+
+    private void resetGameState() {
+        gameOver = false;
+        resetSOSLines();
+    }
+
+    private void resetTurnOrder() {
+        playerRed.setTurn(false);
+        playerBlue.setTurn(true); // blue starts
+    }
+
+    private void initializeRecordingIfNeeded() {
+        if (!isRecording) {
+            recorder = null;
+            return;
+        }
+
+        recorder = new GameRecorder();
+        recorder.start(mode, board.getSize());
+    }
+
+    private Player resolveCurrentPlayer() {
+        return playerBlue.isTurn() ? playerBlue : playerRed;
+    }
+
+    private int[][] buildDirections() {
+        return new int[][]{{1, 0}, {0, 1}, {1, 1}, {1, -1}};
     }
 
     //Recording the move function
