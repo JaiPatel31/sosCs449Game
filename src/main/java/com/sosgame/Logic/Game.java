@@ -52,15 +52,6 @@ public abstract class Game {
         this.gameOver = false;
     }
 
-    // Overloaded constructor to include recording option
-    public Game(GameBoard board, String mode, Player red, Player blue, boolean isRecording) {
-        this.board = board;
-        this.mode = mode;
-        this.playerRed = red;
-        this.playerBlue = blue;
-        this.gameOver = false;
-        this.isRecording = isRecording;
-    }
     // Initialize or reset runtime state before starting a game
     public void initialize() {
         resetPlayers();

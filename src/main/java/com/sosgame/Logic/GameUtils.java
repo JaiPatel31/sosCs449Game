@@ -25,7 +25,11 @@ public class GameUtils {
         initializeTurns(red, blue);
 
 
-        this.game = createGame(gameMode, board, red, blue,isRecording);
+        this.game = createGame(gameMode, board, red, blue);
+
+        if (isRecording) {
+            game.enableRecording();
+        }
 
 
         game.initialize();
@@ -45,7 +49,7 @@ public class GameUtils {
         blue.setTurn(true);
         red.setTurn(false);
 
-        this.game = createGame(replayer.getMode(), board, red, blue, false);
+        this.game = createGame(replayer.getMode(), board, red, blue);
 
         this.gameBoardUI = ui;
 
@@ -70,11 +74,11 @@ public class GameUtils {
     }
 
     // Create game based on mode
-    private Game createGame(String mode, GameBoard board, Player red, Player blue,boolean isRecording) {
+    private Game createGame(String mode, GameBoard board, Player red, Player blue) {
         if ("Simple".equalsIgnoreCase(mode)) {
-            return new SimpleGame(board, red, blue,isRecording);
+            return new SimpleGame(board, red, blue);
         }
-        return new GeneralGame(board, red, blue,isRecording);
+        return new GeneralGame(board, red, blue);
     }
 
     private void autoStartIfComputerTurn() {
