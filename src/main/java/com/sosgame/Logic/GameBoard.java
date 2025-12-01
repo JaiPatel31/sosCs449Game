@@ -83,18 +83,30 @@ public class GameBoard {
     }
     // Places a letter for a player at the given cell
     public void placeLetter(int row, int col, char letter, String player) {
-        if (isCellEmpty(row, col) && (letter == 'S' || letter == 'O') && (player.equals("Red") || player.equals("Blue"))) {
-            letterBoard[row][col] = letter;
-            ownerBoard[row][col] = player.charAt(0); // 'R' for Red, 'B' for Blue
-        } else {
-            // Throw error for invalid move
-            if (!isCellEmpty(row, col)) {
-                throw new IllegalArgumentException("Cell is already occupied.");
-            } else if (letter != 'S' && letter != 'O') {
-                throw new IllegalArgumentException("Invalid letter. Only 'S' or 'O' are allowed.");
-            } else if (!player.equals("Red") && !player.equals("Blue")) {
-                throw new IllegalArgumentException("Invalid player. Only 'Red' or 'Blue' are allowed.");
-            }
+        validateCellAvailable(row, col);
+        validateLetter(letter);
+        validatePlayer(player);
+
+        letterBoard[row][col] = letter;
+        ownerBoard[row][col] = player.charAt(0); // 'R' for Red, 'B' for Blue
+    }
+
+
+    private void validateCellAvailable(int row, int col) {
+        if (!isCellEmpty(row, col)) {
+            throw new IllegalArgumentException("Cell is already occupied.");
+        }
+    }
+
+    private void validateLetter(char letter) {
+        if (letter != 'S' && letter != 'O') {
+            throw new IllegalArgumentException("Invalid letter. Only 'S' or 'O' are allowed.");
+        }
+    }
+
+    private void validatePlayer(String player) {
+        if (!player.equals("Red") && !player.equals("Blue")) {
+            throw new IllegalArgumentException("Invalid player. Only 'Red' or 'Blue' are allowed.");
         }
     }
 }
