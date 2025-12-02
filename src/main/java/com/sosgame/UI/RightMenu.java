@@ -9,77 +9,100 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.*;
 
 public class RightMenu {
-    private RadioButton humanRed = new RadioButton("Human"); // Radio button for Human player
-    private RadioButton computerRed = new RadioButton("Computer"); // Radio button for Computer player
-    private RadioButton redS = new RadioButton("S"); // Radio button for letter S
-    private RadioButton redO = new RadioButton("O"); // Radio button for letter O
-    private Button replayGame = new Button("Replay Game"); // Button to replay the game
-    private Button newGame = new Button("New Game"); // Button to start a new game
+    private RadioButton humanRed; // Radio button for Human player
+    private RadioButton computerRed; // Radio button for Computer player
+    private RadioButton redS; // Radio button for letter S
+    private RadioButton redO; // Radio button for letter O
+    private Button replayGame; // Button to replay the game
+    private Button newGame; // Button to start a new game
     private GameUtils gameUtils; // Game logic controller
-
 
     // Creates the right menu UI for Red player options
     public VBox createRightMenu(GameUtils gameController, GameUI gameUI) {
         this.gameUtils = gameController;
+        initializePlayerControls();
+        initializeLetterControls();
+        initializeActionButtons(gameUI);
+        VBox letterSelectionBox = buildLetterSelectionBox();
+        VBox buttonBox = buildButtonBox();
+        VBox rightMenu = assembleRightMenu(letterSelectionBox, buttonBox);
+        wireEventHandlers();
+        return rightMenu;
+    }
 
-
-        VBox rightMenu = new VBox(20); // Main container for right menu
-        rightMenu.setPadding(new Insets(10));
-
-        // Red Player Label
-        Label redPlayer = new Label("Red Player"); // Label for Red player
-
-        // Human and Computer Radio Buttons
-        humanRed = new RadioButton("Human"); // Human player option
-        computerRed = new RadioButton("Computer"); // Computer player option
-        ToggleGroup redGroup = new ToggleGroup(); // Group for player type
+    private void initializePlayerControls() {
+        humanRed = new RadioButton("Human");
+        computerRed = new RadioButton("Computer");
+        ToggleGroup redGroup = new ToggleGroup();
         humanRed.setToggleGroup(redGroup);
         computerRed.setToggleGroup(redGroup);
-        humanRed.setSelected(true); // Default value: Human selected
+        humanRed.setSelected(true);
+    }
 
-        // Human Player Letter Selection
-        redS = new RadioButton("S"); // Option for letter S
-        redO = new RadioButton("O"); // Option for letter O
-        ToggleGroup redLetterGroup = new ToggleGroup(); // Group for letter selection
+    private void initializeLetterControls() {
+        redS = new RadioButton("S");
+        redO = new RadioButton("O");
+        ToggleGroup redLetterGroup = new ToggleGroup();
         redS.setToggleGroup(redLetterGroup);
         redO.setToggleGroup(redLetterGroup);
-        redS.setSelected(true); // Default value: S selected
-        // Action listeners for radio buttons
-        redO.setOnAction(e->changeRedSelectedLetter()); // Change letter to O
-        redS.setOnAction(e->changeRedSelectedLetter()); // Change letter to S
-        // When Human is selected enable letter selection, otherwise disable it
-        humanRed.setOnAction(e -> {
-            redS.setDisable(false); // Enable S
-            redO.setDisable(false); // Enable O
-        });
-        computerRed.setOnAction(e -> {
-            redS.setDisable(true); // Disable S
-            redO.setDisable(true); // Disable O
-        });
+        redS.setSelected(true);
+    }
 
-        // VBox for Human Letter Selection
-        VBox redLetterSelection = new VBox(10, redS, redO); // Container for letter options
-        redLetterSelection.setPadding(new Insets(0, 0, 0, 20));
-
-        // Replay and New Game Buttons
-        replayGame = new Button("Replay Game"); // Button to replay game
+    private void initializeActionButtons(GameUI gameUI) {
+        replayGame = new Button("Replay Game");
         replayGame.setMaxWidth(Double.MAX_VALUE);
-        replayGame.setOnAction(e -> gameUI.onReplayGame()); // Replay game on click
-        newGame = new Button("New Game"); // Button to start new game
-        newGame.setMaxWidth(Double.MAX_VALUE);
-        VBox rightButtonBox = new VBox(10, replayGame, newGame); // Container for buttons
-        newGame.setOnAction(e -> gameUI.startNewGame()); // Start new game on click
+        replayGame.setOnAction(e -> gameUI.onReplayGame());
 
-        // Spacer to make the radio buttons go to the middle
-        Region rightTopSpacer = new Region(); // Top spacer
-        Region rightBottomSpacer = new Region(); // Bottom spacer
+        newGame = new Button("New Game");
+        newGame.setMaxWidth(Double.MAX_VALUE);
+        newGame.setOnAction(e -> gameUI.startNewGame());
+    }
+
+    private VBox buildLetterSelectionBox() {
+        VBox box = new VBox(10, redS, redO);
+        box.setPadding(new Insets(0, 0, 0, 20));
+        return box;
+    }
+
+    private VBox buildButtonBox() {
+        return new VBox(10, replayGame, newGame);
+    }
+
+    private VBox assembleRightMenu(VBox letterSelectionBox, VBox buttonBox) {
+        VBox rightMenu = new VBox(20);
+        rightMenu.setPadding(new Insets(10));
+
+        Label redPlayer = new Label("Red Player");
+        Region rightTopSpacer = new Region();
+        Region rightBottomSpacer = new Region();
         VBox.setVgrow(rightTopSpacer, Priority.ALWAYS);
         VBox.setVgrow(rightBottomSpacer, Priority.ALWAYS);
 
-        // Add everything to the right menu
-        rightMenu.getChildren().addAll(rightTopSpacer, redPlayer, humanRed, redLetterSelection, computerRed, rightBottomSpacer, rightButtonBox);
-
+        rightMenu.getChildren().addAll(
+            rightTopSpacer,
+            redPlayer,
+            humanRed,
+            letterSelectionBox,
+            computerRed,
+            rightBottomSpacer,
+            buttonBox
+        );
         return rightMenu;
+    }
+
+    private void wireEventHandlers() {
+        redS.setOnAction(e -> changeRedSelectedLetter());
+        redO.setOnAction(e -> changeRedSelectedLetter());
+
+        humanRed.setOnAction(e -> {
+            redS.setDisable(false);
+            redO.setDisable(false);
+            changeRedSelectedLetter();
+        });
+        computerRed.setOnAction(e -> {
+            redS.setDisable(true);
+            redO.setDisable(true);
+        });
     }
     // Getter for the selected player type (Human or Computer)
    public String getRedType(){
