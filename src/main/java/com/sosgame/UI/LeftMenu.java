@@ -22,13 +22,14 @@ public class LeftMenu {
     // Creates the left menu UI for Blue player options
     public VBox createLeftMenu(GameUtils gameController) {
         this.gameUtils = gameController;
-        VBox leftMenu = new VBox(20); // Main container for left menu
-        leftMenu.setPadding(new Insets(10));
+        initializeControls();
+        VBox letterSelectionBox = buildLetterSelectionBox();
+        VBox leftMenu = assembleLeftMenu(letterSelectionBox);
+        wireEventHandlers();
+        return leftMenu;
+    }
 
-        // Red Blue Player Labels
-        Label bluePlayer = new Label("Blue Player"); // Label for Blue player
-
-        // Human and Computer Radio Buttons
+    private void initializeControls() {
         humanBlue = new RadioButton("Human"); // Human player option
         computerBlue = new RadioButton("Computer"); // Computer player option
         ToggleGroup blueGroup = new ToggleGroup(); // Group for player type
@@ -39,13 +40,51 @@ public class LeftMenu {
         // Human Player Letter Selection
         blueS = new RadioButton("S"); // Option for letter S
         blueO = new RadioButton("O"); // Option for letter O
-        ToggleGroup blueLetterGroup = new ToggleGroup(); // Group for letter selection
-        blueS.setToggleGroup(blueLetterGroup);
-        blueO.setToggleGroup(blueLetterGroup);
+        ToggleGroup letterGroup = new ToggleGroup(); // Group for letter selection
+        blueS.setToggleGroup(letterGroup);
+        blueO.setToggleGroup(letterGroup);
         blueS.setSelected(true); // Default value: S selected
+
+        // Add a Record CheckBox at the bottom
+        recordGame = new CheckBox("Record Game"); // Checkbox to record game
+    }
+
+    private VBox buildLetterSelectionBox() {
+        VBox box = new VBox(10, blueS, blueO); // Container for letter options
+        box.setPadding(new Insets(0, 0, 0, 20));
+        return box;
+    }
+
+    private VBox assembleLeftMenu(VBox letterSelectionBox) {
+        VBox leftMenu = new VBox(20); // Main container for left menu
+        leftMenu.setPadding(new Insets(10));
+
+        // Red Blue Player Labels
+        Label bluePlayer = new Label("Blue Player"); // Label for Blue player
+
+        // Spacer to make the radio buttons go to the middle
+        Region leftTopSpacer = new Region(); // Top spacer
+        Region leftBottomSpacer = new Region(); // Bottom spacer
+        VBox.setVgrow(leftTopSpacer, Priority.ALWAYS);
+        VBox.setVgrow(leftBottomSpacer, Priority.ALWAYS);
+
+        // Add everything to the left menu
+        leftMenu.getChildren().addAll(
+            leftTopSpacer,
+            bluePlayer,
+            humanBlue,
+            letterSelectionBox,
+            computerBlue,
+            leftBottomSpacer,
+            recordGame
+        );
+        return leftMenu;
+    }
+
+    private void wireEventHandlers() {
         // Action listeners for radio buttons
-        blueO.setOnAction(e->changeBlueSelectedLetter()); // Change letter to O
-        blueS.setOnAction(e->changeBlueSelectedLetter()); // Change letter to S
+        blueO.setOnAction(e -> changeBlueSelectedLetter()); // Change letter to O
+        blueS.setOnAction(e -> changeBlueSelectedLetter()); // Change letter to S
 
         // When Human is selected enable letter selection, otherwise disable it
         humanBlue.setOnAction(e -> {
@@ -57,24 +96,6 @@ public class LeftMenu {
             blueS.setDisable(true); // Disable S
             blueO.setDisable(true); // Disable O
         });
-
-        // VBox for Human Letter Selection
-        VBox blueLetterSelection = new VBox(10, blueS, blueO); // Container for letter options
-        blueLetterSelection.setPadding(new Insets(0, 0, 0, 20));
-
-        // Add a Record CheckBox at the bottom
-        recordGame = new CheckBox("Record Game"); // Checkbox to record game
-
-        // Spacer to make the radio buttons go to the middle
-        Region leftTopSpacer = new Region(); // Top spacer
-        Region leftBottomSpacer = new Region(); // Bottom spacer
-        VBox.setVgrow(leftTopSpacer, Priority.ALWAYS);
-        VBox.setVgrow(leftBottomSpacer, Priority.ALWAYS);
-
-        // Add everything to the left menu
-        leftMenu.getChildren().addAll(leftTopSpacer, bluePlayer, humanBlue, blueLetterSelection, computerBlue, leftBottomSpacer, recordGame);
-
-        return leftMenu;
     }
 
     // Getter for the selected player type (Human or Computer)
@@ -83,10 +104,10 @@ public class LeftMenu {
     }
 
     // Changes the selected letter for Blue player
-    private void changeBlueSelectedLetter(){
-        if(blueS.isSelected()){
+    private void changeBlueSelectedLetter() {
+        if (blueS.isSelected()) {
             gameUtils.getPlayerBlue().setSelectedLetter('S');
-        }else if(blueO.isSelected()){
+        } else if (blueO.isSelected()) {
             gameUtils.getPlayerBlue().setSelectedLetter('O');
         }
     }
