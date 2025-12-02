@@ -3,9 +3,9 @@ package com.sosgame.Logic;
 public class GeneralGame extends Game {
 
     // General game rules implementation
-    public GeneralGame(GameBoard board, Player red, Player blue, boolean isRecording) {
+    public GeneralGame(GameBoard board, Player red, Player blue) {
         // Call base constructor with mode name
-        super(board, "General", red, blue,isRecording);
+        super(board, "General", red, blue);
     }
 
     @Override

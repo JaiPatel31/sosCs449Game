@@ -86,7 +86,9 @@ public class GameUtils {
         if (game == null || game.isGameOver() || !(getCurrentPlayer() instanceof ComputerPlayer)) {
             return;
         }
-
+        executeComputerTurn();
+    }
+    private void executeComputerTurn() {
         Player ai = getCurrentPlayer();
 
         // make one move

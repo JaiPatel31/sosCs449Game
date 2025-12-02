@@ -16,7 +16,7 @@ public class GeneralGameTest {
         board = new GameBoard(3);
         red = new Player("Red", "Human");
         blue = new Player("Blue", "Human");
-        game = new GeneralGame(board, red, blue,false);
+        game = new GeneralGame(board, red, blue);
         game.initialize();
     }
 
@@ -26,7 +26,7 @@ public class GeneralGameTest {
         GameBoard board = new GameBoard(3);
         Player red  = new Player("Red", "Human");
         Player blue = new Player("Blue", "Human");
-        GeneralGame game = new GeneralGame(board, red, blue,false);
+        GeneralGame game = new GeneralGame(board, red, blue);
         game.initialize(); // Blue starts
 
         // Pre-set row 0 so that placing S at (0,2) completes S-O-S
@@ -97,7 +97,7 @@ public class GeneralGameTest {
         GameBoard board = new GameBoard(3);
         Player red = new Player("Red", "Human");
         Player blue = new Player("Blue", "Human");
-        GeneralGame game = new GeneralGame(board, red, blue,false);
+        GeneralGame game = new GeneralGame(board, red, blue);
         game.initialize();
 
         // Give Blue a higher score
@@ -127,7 +127,7 @@ public class GeneralGameTest {
         GameBoard board = new GameBoard(3);
         Player red = new Player("Red", "Human");
         Player blue = new Player("Blue", "Human");
-        GeneralGame game = new GeneralGame(board, red, blue,false);
+        GeneralGame game = new GeneralGame(board, red, blue);
         game.initialize();
 
         // Both players have equal scores
