@@ -19,37 +19,59 @@ public class TopMenu {
 
     // Creates the top menu bar UI
     public  Node createTopMenu(GameUtils gameController) {
-        gameUtils = gameController;
-        // Top Bar container
-        HBox topMenu = new HBox(20);
-        topMenu.setPadding(new Insets(10));
+        this.gameUtils = gameController;
+        initializeModeControls();
+        initializeBoardSizeInput();
+        HBox topMenu = createTopMenuContainer();
+        Label title = createTitleLabel();
+        Label boardSizeLabel = new Label("Board Size");
+        Region spacerLeft = createSpacer();
+        Region spacerRight = createSpacer();
+        assembleTopMenu(topMenu, title, spacerLeft, spacerRight, boardSizeLabel);
+        return  topMenu;
+    }
 
-        // Left Side Title
-        Label title = new Label("SOS"); // Game title label
-
-        // Middle Buttons for simple and general mode
-        simpleMode = new RadioButton("Simple Mode"); // Simple mode option
-        simpleMode.setSelected(true); // Simple mode is default
-        generalMode = new RadioButton("General Mode"); // General mode option
-        ToggleGroup modeGroup = new ToggleGroup(); // Group for mode selection
+    private void initializeModeControls() {
+        simpleMode = new RadioButton("Simple Mode");
+        generalMode = new RadioButton("General Mode");
+        ToggleGroup modeGroup = new ToggleGroup();
         simpleMode.setToggleGroup(modeGroup);
         generalMode.setToggleGroup(modeGroup);
+        simpleMode.setSelected(true);
+    }
 
-        // Right Side for Board Size textfield
-        Label boardSizeLabel = new Label("Board Size"); // Label for board size
-        boardSizeInput = new TextField(); // Input for board size
-        boardSizeInput.setText("8"); // Default Value
+    private void initializeBoardSizeInput() {
+        boardSizeInput = new TextField();
+        boardSizeInput.setText("8");
         boardSizeInput.setMaxWidth(60);
+    }
 
-        // Spacer to push right side to the right and left side to the left
-        Region spacer1 = new Region(); // Spacer for left
-        Region spacer2 = new Region(); // Spacer for right
-        HBox.setHgrow(spacer1, Priority.ALWAYS);
-        HBox.setHgrow(spacer2, Priority.ALWAYS);
+    private HBox createTopMenuContainer() {
+        HBox topMenu = new HBox(20);
+        topMenu.setPadding(new Insets(10));
+        return topMenu;
+    }
 
-        // Add everything to the top bar
-        topMenu.getChildren().addAll(title, spacer1, simpleMode, generalMode, spacer2, boardSizeLabel, boardSizeInput);
-        return  topMenu;
+    private Label createTitleLabel() {
+        return new Label("SOS");
+    }
+
+    private Region createSpacer() {
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        return spacer;
+    }
+
+    private void assembleTopMenu(HBox topMenu, Label title, Region spacerLeft, Region spacerRight, Label boardSizeLabel) {
+        topMenu.getChildren().addAll(
+            title,
+            spacerLeft,
+            simpleMode,
+            generalMode,
+            spacerRight,
+            boardSizeLabel,
+            boardSizeInput
+        );
     }
     // Getter for the selected game mode
     public String getMode() {
