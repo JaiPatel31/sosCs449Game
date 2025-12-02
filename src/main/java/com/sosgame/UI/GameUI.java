@@ -83,6 +83,9 @@ public class GameUI {
         GameReplayer replayer = new GameReplayer();
         replayer.load(selected.getAbsolutePath());
 
+        // Rebuild the board UI to match the replay's board size before replay starts
+        resetGame(replayer.getBoardSize());
+
         gameUtils.startReplayGame(replayer, gameBoardUI);
     }
     public void setStage(Stage stage) {
